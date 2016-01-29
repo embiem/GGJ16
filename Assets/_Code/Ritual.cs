@@ -9,5 +9,8 @@ public class Ritual : MonoBehaviour
     {
         Destroy(item.gameObject);
         currScore++;
+
+        if (currScore >= GameManager.current.NeededScore)
+            GameManager.current.OnWin();
     }
 }

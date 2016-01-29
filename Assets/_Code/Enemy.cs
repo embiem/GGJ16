@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
+    bool isReachable = false;
+
     void Start()
     {
         myPathCallback = OnPathCallback;
@@ -16,6 +18,14 @@ public class Enemy : MonoBehaviour
 
     void OnPathCallback(bool reachable)
     {
-        Debug.Log("Enemy Path Callback: " + reachable);
+        isReachable = reachable;
+    }
+
+    void Update()
+    {
+        if (isReachable && myPathfinder.TargetReached)
+        {
+            GameManager.current.OnLoose();
+        }
     }
 }
