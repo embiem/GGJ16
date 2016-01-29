@@ -16,6 +16,6 @@ public class Enemy : MonoBehaviour
 
     void OnPathCallback(bool reachable)
     {
-        Debug.Log("Path Callback: " + reachable);
+        Debug.Log("Enemy Path Callback: " + reachable);
     }
 }
