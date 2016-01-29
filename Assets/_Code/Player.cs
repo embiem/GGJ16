@@ -1,14 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Player : MonoBehaviour 
+public class Player : MonoBehaviour
 {
+    #region Fields
+
     public LayerMask HitDetection;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
     private Transform target;
+    private CollectableItem currCollectable;
+
+    #endregion
+
+    #region Properties
+
+    public bool HasCollectable { get { return currCollectable != null; } }
+
+    #endregion
 
     void Start()
     {
@@ -38,12 +49,34 @@ public class Player : MonoBehaviour
 
     void OnPathCallback(bool reachable)
     {
-        Debug.Log("Player Path Callback: " + reachable);
+        
     }
 
     void OnDisable()
     {
         if (target != null)
             Destroy(target.gameObject);
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        CollectableItem collectableItem = other.GetComponent<CollectableItem>();
+        Ritual ritual = other.GetComponent<Ritual>();
+
+        if (collectableItem != null && !HasCollectable)
+        {
+            PickUpCollectable(collectableItem);
+        }
+        else if (ritual != null)
+        {
+            if (HasCollectable)
+                ritual.AddNewItem(currCollectable);
+        }
+    }
+
+    private void PickUpCollectable(CollectableItem collectableItem)
+    {
+        currCollectable = collectableItem;
+        currCollectable.transform.parent = transform;
     }
 }

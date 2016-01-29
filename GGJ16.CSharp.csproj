@@ -216,6 +216,7 @@
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingPunch.cs" />
     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingRigidbodyCS.cs" />
     <Compile Include="Assets\_Code\CamMovement.cs" />
+    <Compile Include="Assets\_Code\CollectableItem.cs" />
     <Compile Include="Assets\_Code\Enemy.cs" />
     <Compile Include="Assets\_Code\GameManager.cs" />
     <Compile Include="Assets\_Code\PathfinderAgent.cs" />
