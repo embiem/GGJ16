@@ -11,12 +11,12 @@ public class Player : MonoBehaviour
     public GameObject SelectionRing;
     public GameObject ZZParticle;
     public GameObject SlowParticle;
-	public GameObject Bait;
 
     [Header("Assignments")]
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
+	public GameObject Bait;
     
     [Space(5f)]
     public AudioClip SlowWalkClip;
@@ -65,6 +65,8 @@ public class Player : MonoBehaviour
         Camera.main.GetComponent<CamMovement>().SetTarget(transform);
 
         FootPrintAS.clip = SlowWalkClip;
+
+		Bait.SetActive(false);
     }
 
     void Update()
@@ -257,10 +259,16 @@ public class Player : MonoBehaviour
         }
     }
 
-	/// Throw some bait toward to lure the cats
+	/// Throw some bait toward to lure the cats (reuse same object)
 	private void ThrowBait() {
+		Bait.transform.parent = null;
+
 		Vector3 targetPosition = transform.position + transform.forward * baitThrowDistance;
-		Instantiate(Bait, targetPosition, Quaternion.identity);
+		targetPosition.z = 0.5f;
+		Bait.transform.position = targetPosition;
+		Bait.transform.rotation = Quaternion.identity;
+
+		Bait.SetActive(true);
 	}
 
     public void Die()
