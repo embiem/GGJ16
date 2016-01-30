@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
     private bool hasFastEffect;
     private GameObject currEffectParticle;
 
+	private Collider[] overlapResults;
+
     #endregion
 
     #region Properties
@@ -70,6 +72,10 @@ public class Player : MonoBehaviour
 
         FootPrintAS.clip = SlowWalkClip;
     }
+
+	public void DebugReset () {
+		Bait.Despawn();
+	}
 
     void Update()
     {
@@ -161,6 +167,11 @@ public class Player : MonoBehaviour
             {
                 GiveUpCollectable();
             }
+
+			// DEBUG
+			if (Input.GetKeyDown(KeyCode.R)) {
+				DebugReset();
+			}
         }
 
         float velMagnitude = myPathfinder.Velocity.magnitude;
@@ -276,7 +287,18 @@ public class Player : MonoBehaviour
 		// Cannot send more than 1 bait at once
 		if (!Bait.gameObject.activeSelf) {
 			// Raycast check
-			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+			Debug.DrawRay(BaitAnchor.position, transform.forward * BaitThrowDistance, Color.red, 1f, false);
+			// Replace 0.5f with half the height of the bait if needed
+//			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
+			if (Physics.BoxCast(BaitAnchor.position - transform.forward * 1f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
+//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
+//			int resultNb = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 10f, overlapResults, transform.rotation);
+//			Debug.LogFormat("resultNb: {0}", resultNb);
+//			Debug.LogFormat("LayerMask Obstacle: {0}", LayerMask.GetMask("Obstacle"));
+//			if (resultNb > 0) {
 				Debug.Log("Raycast detected obstacle, cannot throw bait");
 				return;
 			}

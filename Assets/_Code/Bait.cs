@@ -4,7 +4,7 @@ using System.Collections;
 public class Bait : MonoBehaviour {
 
 	new Rigidbody rigidbody;
-	BoxCollider collider;
+	new	BoxCollider collider;
 
 	private bool detectable;
 	public bool Detectable { get { return detectable; } }
