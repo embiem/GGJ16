@@ -14,6 +14,9 @@ public class Enemy : MonoBehaviour
     public float NormalSpeed = 4;
     public float FollowSpeed = 7;
 
+	[Header("Sensor")]
+	public float sensorRadius = 10f;
+
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
@@ -68,7 +71,7 @@ public class Enemy : MonoBehaviour
                     break;
                 default:
                 case EnemyState.MovingAround:
-                    if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && !myPathfinder.CalculatingPath)
+				if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath)
                     {
                         myPathfinder.speed = FollowSpeed;
                         myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
@@ -142,4 +145,9 @@ public class Enemy : MonoBehaviour
         yield return new WaitForSeconds(0.1f);
         GameObject.Destroy(this.gameObject);
     }
+
+	bool IsWithinSensorRadius(Transform tr) {
+		Vector2 groundVectorToTr = (Vector2) (tr.position - transform.position);
+		return groundVectorToTr.sqrMagnitude < sensorRadius * sensorRadius;
+	}
 }
