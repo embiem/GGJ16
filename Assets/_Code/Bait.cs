@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Bait : MonoBehaviour {
+public class Bait : MonoBehaviour, IPooledObject {
 
 	new Rigidbody rigidbody;
 	new	BoxCollider collider;
@@ -21,6 +21,16 @@ public class Bait : MonoBehaviour {
 		transform.parent = null;
 
 		// auto-hide
+		Despawn();
+	}
+
+	/// Is the object currently used? It cannot be requested if true.
+	public bool IsInUse() {
+		return gameObject.activeSelf;
+	}
+
+	/// Release the object so that it can be used next time
+	public void Release() {
 		Despawn();
 	}
 

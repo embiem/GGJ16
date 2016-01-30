@@ -99,8 +99,12 @@ public class Enemy : MonoBehaviour
 					}
 					break;
 				case EnemyState.ChasingBait:
-					if (GameManager.current.Player == null || GameManager.current.Player != null && !GameManager.current.Bait.Detectable ||
-						GameManager.current.Player != null && GameManager.current.Bait.Detectable && !IsWithinSensorRadius(GameManager.current.Bait.transform)) {
+					// never give up on bait even if gets out of range: cats will remember the path to get them anyway, and this will avoid odd behaviour
+					// such as starting chasing the bait then wander in the middle; while allowing strategy such as throwing the bait in the sensor radius of a cat
+					// while forcing it to make a long detour to eat it
+					if (GameManager.current.Player == null || GameManager.current.Player != null && !GameManager.current.Bait.Detectable
+//						|| GameManager.current.Player != null && GameManager.current.Bait.Detectable && !IsWithinSensorRadius(GameManager.current.Bait.transform)
+					) {
 						// give up on bait (or bait does not exist anymore) -> wander
 						Wander();
 					} else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
