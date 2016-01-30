@@ -9,12 +9,12 @@ public class UIWindow
 {
     public GameObject WindowRoot;
 
-    public void Open()
+    public virtual void Open()
     {
         WindowRoot.SetActive(true);
     }
 
-    public void Close()
+    public virtual void Close()
     {
         WindowRoot.SetActive(false);
     }
@@ -33,7 +33,35 @@ public class UIManager : MonoBehaviour
     [Header("Elements")]
     public Scrollbar ObjectiveScrollbar;
     public Text GameStartText;
+    public Text TxtMana;
+    public Button SkillSlowBtn;
+    public Button SkillSleepBtn;
+    public Button SkillBombBtn;
 
     [Header("Windows")]
     public WinLooseWindow_Container WinLooseWindow;
+
+    public void OnSkillClicked(int id)
+    {
+        if (id == 1)
+            GameManager.current.Player.DoSlowSkill();
+        else
+            if (id == 2)
+                GameManager.current.Player.DoFreezeSkill();
+            else
+                if (id == 3)
+                    GameManager.current.Player.DoBombSkill();
+    }
+
+    public void OnAltInteraction()
+    {
+        if (!GameManager.current.Player.HasCollectable)
+        {
+            GameManager.current.Player.ThrowBait();
+        }
+        else
+        {
+            GameManager.current.Player.GiveUpCollectable();
+        }
+    }
 }

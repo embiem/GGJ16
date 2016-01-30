@@ -10,6 +10,10 @@ public class CollectableItem : MonoBehaviour
     {
         startPos = transform.position;
         startRot = transform.rotation;
+
+        int activatedChild = Random.Range(0, transform.childCount);
+        for (int i = 0; i < transform.childCount; i++)
+            transform.GetChild(i).gameObject.SetActive(i == activatedChild);
     }
 
     public void Reset()
