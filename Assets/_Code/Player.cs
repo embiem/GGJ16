@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public Animator myAnim;
     public GameObject BurnDownParticle;
 	public GameObject Bait;
+	public Transform BaitAnchor;
     
     [Space(5f)]
     public AudioClip SlowWalkClip;
@@ -28,7 +29,8 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
-	public float baitThrowDistance = 2f;
+	public float BaitThrowDistance = 2f;
+	public float BaitThrowTime = 1f;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -265,14 +267,18 @@ public class Player : MonoBehaviour
 
 	/// Throw some bait toward to lure the cats (reuse same object)
 	private void ThrowBait() {
+		// Move bait to bait anchor (starting position)
 		Bait.transform.parent = null;
+		Bait.transform.position = BaitAnchor.transform.position;
+		Bait.transform.rotation = transform.rotation;
 
-		Vector3 targetPosition = transform.position + transform.forward * baitThrowDistance;
-		targetPosition.y = 0.5f;
-		Bait.transform.position = targetPosition;
-		Bait.transform.rotation = Quaternion.identity;
+		// Target position is in front of character, but just on ground
+		Vector3 targetPosition = BaitAnchor.position + transform.forward * BaitThrowDistance;
+		targetPosition.y = 0f;
 
-		Bait.SetActive(true);
+		// Tween bait toward target
+//		LeanTween.move(Bait, targetPosition, BaitThrowTime).setEase(LeanTweenType.easeInOutQuad).setOnComplete(Bait.GetComponent<Bait>().Land);
+
 	}
 
     public void Die()

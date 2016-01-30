@@ -3,13 +3,16 @@ using System.Collections;
 
 public class Bait : MonoBehaviour {
 
+	new Rigidbody rigidbody;
+	new float a;
+
 	// Use this for initialization
-	void Start () {
-	
+	void Awake () {
+		rigidbody = GetComponent<Rigidbody>();
 	}
 	
-	// Update is called once per frame
-	void Update () {
-	
+	public void Land () {
+//		rigidbody.velocity = Vector3.zero;
+		Debug.Log("Land");
 	}
 }
