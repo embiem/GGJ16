@@ -10,11 +10,17 @@ public class Player : MonoBehaviour
     [Header("Prefabs")]
     public GameObject SelectionRing;
     public GameObject ZZParticle;
+    public GameObject SlowParticle;
 
     [Header("Assignments")]
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
+    
+    [Space(5f)]
+    public AudioClip SlowWalkClip;
+    public AudioClip FastWalkClip;
+    public AudioSource FootPrintAS;
 
     [Header("Balancing")]
 	public float SlowSpeed = 4f;
@@ -55,6 +61,8 @@ public class Player : MonoBehaviour
         SelectionRing.transform.localScale = Vector3.zero;
 
         Camera.main.GetComponent<CamMovement>().SetTarget(transform);
+
+        FootPrintAS.clip = SlowWalkClip;
     }
 
     void Update()
@@ -64,7 +72,18 @@ public class Player : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
-                    enemy.OnSlow(6f);
+                {
+                    GameObject zz = GameObject.Instantiate(SlowParticle);
+                    zz.transform.position = transform.position;
+
+                    Enemy temp = enemy;
+                    LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
+                    {
+                        zz.transform.position = temp.transform.position;
+                        zz.transform.parent = temp.transform;
+                    });
+                    enemy.OnSlow(6f, zz);
+                }
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2))
@@ -132,11 +151,24 @@ public class Player : MonoBehaviour
         float velMagnitude = myPathfinder.Velocity.magnitude;
 
         // Toggle running animation bool based on current speed
-        if (velMagnitude > 0.1f && !myAnim.GetBool("Running"))
-            myAnim.SetBool("Running", true);
+        if (velMagnitude > 0.1f)
+        {
+            if (!myAnim.GetBool("Running"))
+                myAnim.SetBool("Running", true);
+
+            if (!FootPrintAS.isPlaying)
+                FootPrintAS.Play();
+        }
         else
-            if (velMagnitude <= 0.1f && myAnim.GetBool("Running"))
-                myAnim.SetBool("Running", false);
+            if (velMagnitude <= 0.1f)
+            {
+                if (myAnim.GetBool("Running"))
+                    myAnim.SetBool("Running", false);
+
+                if (FootPrintAS.isPlaying)
+                    FootPrintAS.Pause();
+            }
+               
 
         PS.emissionRate = velMagnitude * 15; // show particles based on current speed
     }
@@ -224,6 +256,7 @@ public class Player : MonoBehaviour
     {
         myPathfinder.speed = 0f;
         BurnDownParticle.gameObject.SetActive(true);
+        BurnDownParticle.transform.position = transform.position;
         BurnDownParticle.transform.parent = null;
         StartCoroutine(DieCoRo());
     }
