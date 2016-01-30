@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public GameObject SelectionRing;
     public GameObject ZZParticle;
     public GameObject SlowParticle;
+	public GameObject Bait;
 
     [Header("Assignments")]
     public ParticleSystem PS;
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
+	public float baitThrowDistance = 2f;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -142,6 +144,9 @@ public class Player : MonoBehaviour
                     Debug.Log("Raycast didn't hit anything!");
                 }
             }
+			else if (Input.GetMouseButtonDown(1) && !HasCollectable) {
+				ThrowBait();
+			}
             else if (Input.GetMouseButtonDown(1) && HasCollectable)
             {
                 GiveUpCollectable();
@@ -251,6 +256,12 @@ public class Player : MonoBehaviour
             lastTimeTossed = Time.time;
         }
     }
+
+	/// Throw some bait toward to lure the cats
+	private void ThrowBait() {
+		Vector3 targetPosition = transform.position + transform.forward * baitThrowDistance;
+		Instantiate(Bait, targetPosition, Quaternion.identity);
+	}
 
     public void Die()
     {
