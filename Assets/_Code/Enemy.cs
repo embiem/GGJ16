@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
 
 	[Header("Assignments")]
 	public GameObject ExplosionPS;
+    public Renderer KittyRenderer;
+    public Texture[] KittyTextures;
 
 	[Header("Balancing")]
 	public float LooseDistance = 1f;
@@ -46,6 +48,8 @@ public class Enemy : MonoBehaviour
 		myPathfinder.speed = NormalSpeed;
 		currState = EnemyState.MovingAround;
 		myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
+
+        KittyRenderer.material.SetTexture("_MainTex", KittyTextures[Random.Range(0, KittyTextures.Length)]);
 	}
 
 	void OnPathCallback (bool reachable)
