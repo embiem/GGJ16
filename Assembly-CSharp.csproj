@@ -188,6 +188,7 @@
      <Compile Include="Assets\_Code\PathfinderAgent.cs" />
      <Compile Include="Assets\_Code\Player.cs" />
      <Compile Include="Assets\_Code\Ritual.cs" />
+     <Compile Include="Assets\_Code\Shelf.cs" />
      <Compile Include="Assets\_Code\UIManager.cs" />
      <Compile Include="Assets\_Code\iTween.cs" />
      <None Include="Assets\_Code\Shaders\EasyPeasy.shader" />
