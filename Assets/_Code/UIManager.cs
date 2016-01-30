@@ -32,6 +32,7 @@ public class UIManager : MonoBehaviour
 {
     [Header("Elements")]
     public Scrollbar ObjectiveScrollbar;
+    public Text GameStartText;
 
     [Header("Windows")]
     public WinLooseWindow_Container WinLooseWindow;
