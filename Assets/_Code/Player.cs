@@ -6,6 +6,8 @@ public class Player : MonoBehaviour
     #region Fields
 
     public LayerMask HitDetection;
+    public GameObject SelectionRing;
+    public ParticleSystem PS;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -27,6 +29,8 @@ public class Player : MonoBehaviour
         myPathfinder = GetComponent<PathfinderAgent>();
 
         target = new GameObject("Player-Target").transform;
+
+        Camera.main.GetComponent<CamMovement>().SetTarget(transform);
     }
 
     void Update()
@@ -39,12 +43,25 @@ public class Player : MonoBehaviour
             {
                 target.position = hit.point;
                 myPathfinder.NewTarget(target, myPathCallback);
+
+                SelectionRing.transform.position = hit.point + Vector3.up;
+                SelectionRing.transform.localScale = Vector3.zero;
+
+                LeanTween.cancel(SelectionRing);
+                LeanTween.scale(SelectionRing, Vector3.one, 1f).setOnComplete(ResetSelectionRing);
             }
             else
             {
                 Debug.Log("Raycast didn't hit anything!");
             }
         }
+
+        PS.emissionRate = myPathfinder.Velocity.magnitude * 15;
+    }
+
+    void ResetSelectionRing()
+    {
+        SelectionRing.transform.localScale = Vector3.zero;
     }
 
     void OnPathCallback(bool reachable)

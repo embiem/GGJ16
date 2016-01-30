@@ -22,9 +22,11 @@ public class GameManager : MonoBehaviour
 
     private bool ingame;
 
-    void Start()
+    IEnumerator Start()
     {
         SceneManager.LoadScene(CurrentScene, LoadSceneMode.Additive);
+
+        yield return new WaitForEndOfFrame();
 
         ingame = true;
     }
@@ -34,7 +36,8 @@ public class GameManager : MonoBehaviour
         if (ingame)
         {
             ingame = false;
-            Debug.Log("You Loose!");
+            UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU LOOSE. HAHAHA!";
+            UserInterfaceManager.WinLooseWindow.Open();
         }
     }
 
@@ -43,7 +46,18 @@ public class GameManager : MonoBehaviour
         if (ingame)
         {
             ingame = false;
-            Debug.Log("You win!");
+            UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU WON, congrats.";
+            UserInterfaceManager.WinLooseWindow.Open();
         }
+    }
+
+    public void OnScoreUpdated(int newScore)
+    {
+        UserInterfaceManager.ObjectiveScrollbar.size = (float)newScore / (float)NeededScore;
+    }
+
+    public void Retry()
+    {
+        SceneManager.LoadScene(0);
     }
 }

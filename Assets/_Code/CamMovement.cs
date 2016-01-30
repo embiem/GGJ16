@@ -16,8 +16,6 @@ public class CamMovement : MonoBehaviour
 
         // create follow target
         lerpTo = new GameObject("CamLerpTo").transform;
-
-        SetTarget(GameObject.FindGameObjectWithTag("Player").transform);
     }
 
     public void SetTarget(Transform target)
