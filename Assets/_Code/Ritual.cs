@@ -4,6 +4,7 @@ using System.Collections;
 public class Ritual : MonoBehaviour 
 {
     public GameObject ItemAddedParticle;
+    public AudioSource FinalItemTossInSound;
 
     private int currScore = 0;
     public int CurrentScore
@@ -25,7 +26,10 @@ public class Ritual : MonoBehaviour
         CurrentScore++;
 
         if (CurrentScore >= GameManager.current.NeededScore)
+        {
+            FinalItemTossInSound.Play();
             GameManager.current.OnWin();
+        }
 
         ItemAddedParticle.SetActive(true);
         StartCoroutine(DeactivateParticle());

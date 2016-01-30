@@ -32,6 +32,11 @@ public class Player : MonoBehaviour
     public AudioClip FastWalkClip;
     public AudioSource FootPrintAS;
 
+    [Space(5f)]
+    public AudioClip[] ItemTossInClips;
+    public AudioClip ItemPickupClip;
+    public AudioSource ItemTossInAS;
+
     [Header("Balancing")]
 	public float SlowSpeed = 4f;
     public float NormalSpeed = 8f;
@@ -256,11 +261,19 @@ public class Player : MonoBehaviour
         if (collectableItem != null && !HasCollectable)
         {
             PickUpCollectable(collectableItem);
+            ItemTossInAS.Stop();
+            ItemTossInAS.clip = ItemPickupClip;
+            ItemTossInAS.Play();
         }
         else if (ritual != null)
         {
 			if (HasCollectable) {
 				ritual.AddNewItem(DropCollectable());
+
+                // Play Sound
+                ItemTossInAS.Stop();
+                ItemTossInAS.clip = ItemTossInClips[Random.Range(0, ItemTossInClips.Length)];
+                ItemTossInAS.Play();
 			}
         }
         else if (other.tag == "SpeedBox")
