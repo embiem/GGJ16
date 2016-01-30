@@ -8,15 +8,25 @@ ModelImporter:
     100000: //RootNode
     100002: shelfBig
     100004: shelfSmall
+    100006: polySurface1
+    100008: polySurface50
     400000: //RootNode
     400002: shelfBig
     400004: shelfSmall
+    400006: polySurface1
+    400008: polySurface50
     2300000: shelfBig
     2300002: shelfSmall
+    2300004: polySurface1
+    2300006: polySurface50
     3300000: shelfBig
     3300002: shelfSmall
+    3300004: polySurface1
+    3300006: polySurface50
     4300000: shelfBig
     4300002: shelfSmall
+    4300004: polySurface50
+    4300006: polySurface1
     9500000: //RootNode
   materials:
     importMaterials: 1
