@@ -188,6 +188,7 @@
      <Compile Include="Assets\_Code\Player.cs" />
      <Compile Include="Assets\_Code\Ritual.cs" />
      <Compile Include="Assets\_Code\UIManager.cs" />
+     <Compile Include="Assets\_Code\iTween.cs" />
      <None Include="Assets\_Code\Shaders\EasyPeasy.shader" />
      <None Include="Assets\AstarPathfindingProject\Editor\EditorAssets\Materials\Navmesh2.shader" />
      <None Include="Assets\LeanTween\Examples\Shader\2dUnlitWithFade.shader" />

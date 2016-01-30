@@ -17,8 +17,9 @@ public class Player : MonoBehaviour
     public GameObject BurnDownParticle;
 
     [Header("Balancing")]
+	public float SlowSpeed = 4f;
     public float NormalSpeed = 8f;
-    public float FastSpeed = 12f;
+//    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
 
     private PathfinderAgent myPathfinder;
@@ -90,7 +91,8 @@ public class Player : MonoBehaviour
                 if (fastTimer > SpeedupLength)
                 {
                     fastTimer = 0;
-                    myPathfinder.speed = NormalSpeed;
+//                    myPathfinder.speed = NormalSpeed;
+					myPathfinder.speedMod = 1f;  // stop speed boost
                     hasFastEffect = false;
 
                     if (currEffectParticle != null)
@@ -166,8 +168,9 @@ public class Player : MonoBehaviour
         }
         else if (ritual != null)
         {
-            if (HasCollectable)
-                ritual.AddNewItem(currCollectable);
+			if (HasCollectable) {
+				ritual.AddNewItem(DropCollectable());
+			}
         }
         else if (other.tag == "SpeedBox")
         {
@@ -176,7 +179,8 @@ public class Player : MonoBehaviour
             currEffectParticle = other.gameObject;
             fastTimer = 0f;
             hasFastEffect = true;
-            myPathfinder.speed = FastSpeed;
+//            myPathfinder.speed = FastSpeed;
+			myPathfinder.speedMod = 1.5f;  // relative speed boost
         }
     }
 
@@ -184,6 +188,7 @@ public class Player : MonoBehaviour
     {
         currCollectable = collectableItem;
         currCollectable.transform.parent = transform;
+		myPathfinder.speed = SlowSpeed;  // character slows down when holding item
     }
 
 	/// <summary>
@@ -197,6 +202,7 @@ public class Player : MonoBehaviour
 			currCollectable.transform.parent = null;
 			currCollectable = null;
 			// TODO: box should fall or stick to ground level
+			myPathfinder.speed = NormalSpeed;  // character recovers normal speed when not holding item
 			return item;
 		}
 
@@ -204,13 +210,12 @@ public class Player : MonoBehaviour
 		return null;
 	}
 
+	// TODO: refactor wirth DropCollectable
     private void GiveUpCollectable()
     {
-        if (currCollectable != null && Time.time - lastTimeTossed > 2f)
+        if (Time.time - lastTimeTossed > 2f)
         {
-            currCollectable.transform.parent = null;
-            currCollectable.Reset();
-            currCollectable = null;
+			DropCollectable().Reset();
             lastTimeTossed = Time.time;
         }
     }
