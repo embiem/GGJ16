@@ -6,6 +6,7 @@ public class Enemy : MonoBehaviour
     public enum EnemyState { MovingAround, ChasingPlayer }
 
     public float LooseDistance = 1f;
+    public float SlowedSpeed = 2;
     public float NormalSpeed = 4;
     public float FollowSpeed = 7;
 
@@ -14,6 +15,11 @@ public class Enemy : MonoBehaviour
 
     private Transform target;
     private EnemyState currState;
+
+    private float currSlowLength;
+    private float slowTimer;
+    private bool hasSlowEffect;
+    private GameObject currEffectParticle;
 
     IEnumerator Start()
     {
@@ -45,7 +51,7 @@ public class Enemy : MonoBehaviour
                     if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
                     {
                         myPathfinder.speed = NormalSpeed;
-                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
+                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(50, 100));
                         currState = EnemyState.MovingAround;
                     }
                     else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
@@ -63,12 +69,29 @@ public class Enemy : MonoBehaviour
                     }
                     else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
                     {
-                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
+                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(50, 100));
                     }
                     break;
             }
 
-            if (GameManager.current.Player != null && Vector3.Distance(transform.position, GameManager.current.Player.transform.position) < LooseDistance)
+            if (hasSlowEffect)
+            {
+                slowTimer += Time.deltaTime;
+                if (slowTimer > currSlowLength)
+                {
+                    myPathfinder.speed = (currState == EnemyState.ChasingPlayer ? FollowSpeed : NormalSpeed);
+                    hasSlowEffect = false;
+                    currSlowLength = 0f;
+
+                    if (currEffectParticle != null)
+                    {
+                        GameObject.Destroy(currEffectParticle.gameObject);
+                        currEffectParticle = null;
+                    }
+                }
+            }
+
+            if ( !(hasSlowEffect && myPathfinder.speed == 0) && GameManager.current.Player != null && Vector3.Distance(transform.position, GameManager.current.Player.transform.position) < LooseDistance)
             {
                 GameManager.current.OnLoose();
             }
@@ -79,5 +102,23 @@ public class Enemy : MonoBehaviour
     {
         if (target != null)
             Destroy(target.gameObject);
+    }
+
+
+    public void OnSlow (float forSeconds)
+    {
+        currSlowLength = forSeconds;
+        slowTimer = 0;
+        myPathfinder.speed = SlowedSpeed;
+        hasSlowEffect = true;
+    }
+
+    public void OnFreeze (float forSeconds, GameObject zzParticle)
+    {
+        currEffectParticle = zzParticle;
+        currSlowLength = forSeconds;
+        slowTimer = 0;
+        myPathfinder.speed = 0f;
+        hasSlowEffect = true;
     }
 }

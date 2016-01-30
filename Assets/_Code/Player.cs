@@ -6,8 +6,14 @@ public class Player : MonoBehaviour
     #region Fields
 
     public LayerMask HitDetection;
+
+    [Header("Prefabs")]
     public GameObject SelectionRing;
+    public GameObject ZZParticle;
+
+    [Header("Assignments")]
     public ParticleSystem PS;
+    public Animator myAnim;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -43,6 +49,30 @@ public class Player : MonoBehaviour
     {
         if (GameManager.current.IsIngame)
         {
+            if (Input.GetKeyDown(KeyCode.Alpha1))
+            {
+                foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
+                    enemy.OnSlow(6f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
+                {
+                    GameObject zz = GameObject.Instantiate(ZZParticle);
+                    zz.transform.position = transform.position;
+
+                    Enemy temp = enemy;
+                    LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
+                    {
+                        zz.transform.position = temp.transform.position;
+                        zz.transform.parent = temp.transform;
+                    });
+                    enemy.OnFreeze(4f, zz);
+                }
+                    
+            }
+
             if (Input.GetMouseButtonDown(0))
             {
                 RaycastHit hit;
@@ -52,11 +82,11 @@ public class Player : MonoBehaviour
                     target.position = hit.point;
                     myPathfinder.NewTarget(target, myPathCallback);
 
-                    SelectionRing.transform.position = hit.point + Vector3.up;
+                    SelectionRing.transform.position = hit.point;
                     SelectionRing.transform.localScale = Vector3.zero;
 
                     LeanTween.cancel(SelectionRing);
-                    LeanTween.scale(SelectionRing, Vector3.one, 1f).setOnComplete(ResetSelectionRing);
+                    LeanTween.scale(SelectionRing, Vector3.one, 0.5f).setOnComplete(ResetSelectionRing);
                 }
                 else
                 {
@@ -69,7 +99,16 @@ public class Player : MonoBehaviour
             }
         }
 
-        PS.emissionRate = myPathfinder.Velocity.magnitude * 15;
+        float velMagnitude = myPathfinder.Velocity.magnitude;
+
+        // Toggle running animation bool based on current speed
+        if (velMagnitude > 0.1f && !myAnim.GetBool("Running"))
+            myAnim.SetBool("Running", true);
+        else
+            if (velMagnitude <= 0.1f && myAnim.GetBool("Running"))
+                myAnim.SetBool("Running", false);
+
+        PS.emissionRate = velMagnitude * 15; // show particles based on current speed
     }
 
     void ResetSelectionRing()
