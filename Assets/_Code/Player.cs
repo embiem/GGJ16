@@ -16,12 +16,21 @@ public class Player : MonoBehaviour
     public Animator myAnim;
     public GameObject BurnDownParticle;
 
+    [Header("Balancing")]
+    public float NormalSpeed = 8f;
+    public float FastSpeed = 12f;
+    public float SpeedupLength = 4f;
+
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
     private Transform target;
     private CollectableItem currCollectable;
     private float lastTimeTossed;
+
+    private float fastTimer;
+    private bool hasFastEffect;
+    private GameObject currEffectParticle;
 
     #endregion
 
@@ -72,6 +81,23 @@ public class Player : MonoBehaviour
                     enemy.OnFreeze(4f, zz);
                 }
                     
+            }
+
+            if (hasFastEffect)
+            {
+                fastTimer += Time.deltaTime;
+                if (fastTimer > SpeedupLength)
+                {
+                    fastTimer = 0;
+                    myPathfinder.speed = NormalSpeed;
+                    hasFastEffect = false;
+
+                    if (currEffectParticle != null)
+                    {
+                        GameObject.Destroy(currEffectParticle.gameObject);
+                        currEffectParticle = null;
+                    }
+                }
             }
 
             if (Input.GetMouseButtonDown(0))
@@ -141,6 +167,15 @@ public class Player : MonoBehaviour
         {
             if (HasCollectable)
                 ritual.AddNewItem(currCollectable);
+        }
+        else if (other.tag == "SpeedBox")
+        {
+            other.GetComponent<Collider>().enabled = false;
+            other.transform.parent = transform;
+            currEffectParticle = other.gameObject;
+            fastTimer = 0f;
+            hasFastEffect = true;
+            myPathfinder.speed = FastSpeed;
         }
     }
 
