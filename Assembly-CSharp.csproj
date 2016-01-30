@@ -176,7 +176,6 @@
      <Compile Include="Assets\LeanTween\Examples\Scripts\PathSpline2d.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplines.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\PathSplinesBezier.cs" />
-     <Compile Include="Assets\LeanTween\Examples\Scripts\TestingAllCS.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingEverything.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingPunch.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingRigidbodyCS.cs" />
@@ -188,6 +187,7 @@
      <Compile Include="Assets\_Code\PathfinderAgent.cs" />
      <Compile Include="Assets\_Code\Player.cs" />
      <Compile Include="Assets\_Code\Ritual.cs" />
+     <Compile Include="Assets\_Code\Shelf.cs" />
      <Compile Include="Assets\_Code\UIManager.cs" />
      <Compile Include="Assets\_Code\iTween.cs" />
      <None Include="Assets\_Code\Shaders\EasyPeasy.shader" />

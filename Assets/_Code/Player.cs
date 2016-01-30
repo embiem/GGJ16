@@ -17,7 +17,8 @@ public class Player : MonoBehaviour
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
-	public GameObject Bait;
+	public Bait Bait;
+	public Transform BaitAnchor;
     
     [Space(5f)]
     public AudioClip SlowWalkClip;
@@ -32,6 +33,8 @@ public class Player : MonoBehaviour
 	public float baitThrowDistance = 2f;
 
     [Header("Skills")]
+	public float BaitThrowDistance = 2f;
+	public float BaitThrowTime = 1f;
     public int BombCount = 3;
     public int MaxMana = 100;
     public int ManaPerSecond = 2;
@@ -51,6 +54,8 @@ public class Player : MonoBehaviour
 
     private int currMana; public int CurrentMana { get { return currMana; } }
     private float lastManaIncrease;
+
+	private Collider[] overlapResults;
 
     #endregion
 
@@ -79,10 +84,14 @@ public class Player : MonoBehaviour
 
         FootPrintAS.clip = SlowWalkClip;
 
-		Bait.SetActive(false);
+		Bait.gameObject.SetActive(false);
 
         currMana = MaxMana;
     }
+
+	public void DebugReset () {
+		Bait.Despawn();
+	}
 
     void Update()
     {
@@ -154,6 +163,11 @@ public class Player : MonoBehaviour
             {
                 GiveUpCollectable();
             }
+
+			// DEBUG
+			if (Input.GetKeyDown(KeyCode.R)) {
+				DebugReset();
+			}
         }
 
         float velMagnitude = myPathfinder.Velocity.magnitude;
@@ -327,14 +341,35 @@ public class Player : MonoBehaviour
 
 	/// Throw some bait toward to lure the cats (reuse same object)
 	public void ThrowBait() {
-		Bait.transform.parent = null;
+		// Cannot send more than 1 bait at once
+		if (!Bait.gameObject.activeSelf) {
+			// Raycast check
+			Debug.DrawRay(BaitAnchor.position, transform.forward * BaitThrowDistance, Color.red, 1f, false);
+			// Replace 0.5f with half the height of the bait if needed
+//			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
+			if (Physics.BoxCast(BaitAnchor.position - transform.forward * 1f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
+//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
+//			int resultNb = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 10f, overlapResults, transform.rotation);
+//			Debug.LogFormat("resultNb: {0}", resultNb);
+//			Debug.LogFormat("LayerMask Obstacle: {0}", LayerMask.GetMask("Obstacle"));
+//			if (resultNb > 0) {
+				Debug.Log("Raycast detected obstacle, cannot throw bait");
+				return;
+			}
 
-		Vector3 targetPosition = transform.position + transform.forward * baitThrowDistance;
-		targetPosition.y = 0.5f;
-		Bait.transform.position = targetPosition;
-		Bait.transform.rotation = Quaternion.identity;
+			// Target position is in front of character, but just on ground
+			Vector3 targetPosition = BaitAnchor.position + transform.forward * BaitThrowDistance;
+			targetPosition.y = 0f;
 
-		Bait.SetActive(true);
+			Bait.Spawn(BaitAnchor.position, transform.rotation);
+
+			// Tween bait toward target
+			LeanTween.move(Bait.gameObject, targetPosition, BaitThrowTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
+		}
+
 	}
 
     public void Die()
