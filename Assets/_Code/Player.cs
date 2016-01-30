@@ -3,6 +3,13 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
+
+	public enum PlayerState
+	{
+		Walking,
+		ThrowingBait
+	}
+
     #region Fields
 
     public LayerMask HitDetection;
@@ -30,16 +37,20 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
-	public float BaitThrowDistance = 2f;
-	public float BaitThrowTime = 1f;
+	public float ThrowBaitDistance = 2f;
+	public float ThrowBaitTime = 0.5f;  // time until bait reaches ground
+	public float ThrowBaitLag = 1f;  // tiime during which character cannot move
     public int BombCount = 3;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
     private Transform target;
+
+	private PlayerState currState;
     private CollectableItem currCollectable;
     private float lastTimeTossed;
+	private float noMoveTimer;
 
     private float fastTimer;
     private bool hasFastEffect;
@@ -62,6 +73,8 @@ public class Player : MonoBehaviour
         myPathfinder = GetComponent<PathfinderAgent>();
 
         target = new GameObject("Player-Target").transform;
+
+		currState = PlayerState.Walking;
 
         lastTimeTossed = Time.time;
 
@@ -161,7 +174,12 @@ public class Player : MonoBehaviour
                 }
             }
 			else if (Input.GetMouseButtonDown(1) && !HasCollectable) {
-				ThrowBait();
+				RaycastHit hit;
+				Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+				if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
+				{
+					ThrowBait(hit.point);
+				}
 			}
             else if (Input.GetMouseButtonDown(1) && HasCollectable)
             {
@@ -198,6 +216,23 @@ public class Player : MonoBehaviour
 
         PS.emissionRate = velMagnitude * 15; // show particles based on current speed
     }
+
+	void FixedUpdate () {
+		switch (currState) {
+		case PlayerState.Walking:
+			break;
+		case PlayerState.ThrowingBait:
+			noMoveTimer -= Time.deltaTime;
+			if (noMoveTimer < 0) {
+				noMoveTimer = 0f;
+				currState = PlayerState.Walking;
+				myPathfinder.SetCanMove(true);
+			}
+			break;
+		default:
+			break;
+		}
+	}
 
     void ResetSelectionRing()
     {
@@ -282,16 +317,25 @@ public class Player : MonoBehaviour
         }
     }
 
-	/// Throw some bait toward to lure the cats (reuse same object)
-	private void ThrowBait() {
+	/// Throw some bait toward to lure the cats (reuse same object), toward target look position
+	private void ThrowBait(Vector3 targetLookPos) {
 		// Cannot send more than 1 bait at once
 		if (!Bait.gameObject.activeSelf) {
+
+			// Cannot throw bait if target position is too close
+			Vector3 toTargetLookGroundVector = targetLookPos - transform.position;
+			toTargetLookGroundVector.y = 0f;
+			if (toTargetLookGroundVector.sqrMagnitude < 2f) {
+				Debug.Log("Cannot throw bait too close to character");
+				return;
+			}
+
 			// Raycast check
-			Debug.DrawRay(BaitAnchor.position, transform.forward * BaitThrowDistance, Color.red, 1f, false);
+			Debug.DrawRay(transform.position, transform.forward * ThrowBaitDistance, Color.red, 1f, false);
 			// Replace 0.5f with half the height of the bait if needed
 //			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
 			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
-			if (Physics.BoxCast(BaitAnchor.position - transform.forward * 1f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+			if (Physics.BoxCast(transform.position, Vector3.one * 0.5f, transform.forward, transform.rotation, ThrowBaitDistance + 0.5f, LayerMask.GetMask("Obstacle"))) {
 //			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
 //			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
 //			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
@@ -303,14 +347,24 @@ public class Player : MonoBehaviour
 				return;
 			}
 
+			Vector3 toTargetGroundVector = toTargetLookGroundVector.normalized * ThrowBaitDistance;
 			// Target position is in front of character, but just on ground
-			Vector3 targetPosition = BaitAnchor.position + transform.forward * BaitThrowDistance;
+			Vector3 targetPosition = transform.position + toTargetGroundVector;
 			targetPosition.y = 0f;
 
-			Bait.Spawn(BaitAnchor.position, transform.rotation);
+			currState = PlayerState.ThrowingBait;
+
+			// Freeze character position and rotate character
+			myPathfinder.SetCanMove(false);
+			transform.rotation = Quaternion.LookRotation(toTargetGroundVector);  // immediate rotation
+			myPathfinder.RotateTo(targetLookPos);  // to make sure the character does not rotate toward somewhere else afterward (except if walking)
+
+			noMoveTimer = ThrowBaitLag;
+
+			Bait.Spawn(transform.position + toTargetLookGroundVector.normalized * 0.2f, transform.rotation);
 
 			// Tween bait toward target
-			LeanTween.move(Bait.gameObject, targetPosition, BaitThrowTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
+			LeanTween.move(Bait.gameObject, targetPosition, ThrowBaitTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
 		}
 
 	}
