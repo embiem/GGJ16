@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 2013
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GGJ16.CSharp.Plugins", "GGJ16.CSharp.Plugins.csproj", "{9A146C76-8600-50CB-A042-8D3386B4F2C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GGJ16.CSharp", "GGJ16.CSharp.csproj", "{7D4FCDE5-76CE-C157-9BE7-EC3996031D47}"

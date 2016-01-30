@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
 
     private Transform target;
     private CollectableItem currCollectable;
+    private float lastTimeTossed;
 
     #endregion
 
@@ -29,6 +30,11 @@ public class Player : MonoBehaviour
         myPathfinder = GetComponent<PathfinderAgent>();
 
         target = new GameObject("Player-Target").transform;
+
+        lastTimeTossed = Time.time;
+
+        SelectionRing = GameObject.Instantiate(SelectionRing);
+        SelectionRing.transform.localScale = Vector3.zero;
 
         Camera.main.GetComponent<CamMovement>().SetTarget(transform);
     }
@@ -106,7 +112,12 @@ public class Player : MonoBehaviour
 
     private void PutDownCollectable()
     {
-        currCollectable.transform.parent = null;
-        currCollectable = null;
+        if (currCollectable != null && Time.time - lastTimeTossed > 2f)
+        {
+            currCollectable.transform.parent = null;
+            currCollectable.Reset();
+            currCollectable = null;
+            lastTimeTossed = Time.time;
+        }
     }
 }

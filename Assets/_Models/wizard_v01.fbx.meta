@@ -1,16 +1,74 @@
 fileFormatVersion: 2
 guid: ad64b7b9cbb1dac45816cc228eb1c313
-timeCreated: 1454110669
+timeCreated: 1454123743
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
+    100002: chest
+    100004: hat01
+    100006: hat02
+    100008: hat03
+    100010: head01
+    100012: hip
+    100014: l_elbow01
+    100016: l_eyebrow01
+    100018: l_hand01
+    100020: l_shoulder01
+    100022: l_wrist01
+    100024: nose01
+    100026: r_elbow01
+    100028: r_eyebrow01
+    100030: r_hand01
+    100032: r_shoulder01
+    100034: r_wrist01
+    100036: root01
+    100038: tail01
+    100040: tail02
+    100042: wizard
+    100044: nurbsCircle11
+    100046: nurbsCircle14
+    100048: nurbsCircle15
+    100050: nurbsCircle2
+    100052: nurbsCircle3
+    100054: rootCC
     400000: //RootNode
+    400002: chest
+    400004: hat01
+    400006: hat02
+    400008: hat03
+    400010: head01
+    400012: hip
+    400014: l_elbow01
+    400016: l_eyebrow01
+    400018: l_hand01
+    400020: l_shoulder01
+    400022: l_wrist01
+    400024: nose01
+    400026: r_elbow01
+    400028: r_eyebrow01
+    400030: r_hand01
+    400032: r_shoulder01
+    400034: r_wrist01
+    400036: root01
+    400038: tail01
+    400040: tail02
+    400042: wizard
+    400044: nurbsCircle11
+    400046: nurbsCircle14
+    400048: nurbsCircle15
+    400050: nurbsCircle2
+    400052: nurbsCircle3
+    400054: rootCC
     2300000: //RootNode
     3300000: //RootNode
     4300000: pCube16
+    4300002: wizard
+    7400000: Take 001
     9500000: //RootNode
+    11100000: //RootNode
+    13700000: wizard
   materials:
     importMaterials: 1
     materialName: 0
@@ -25,7 +83,7 @@ ModelImporter:
     animationImportWarnings: 
     animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
-    animationCompression: 1
+    animationCompression: 3
     animationRotationError: 0.5
     animationPositionError: 0.5
     animationScaleError: 0.5
@@ -35,7 +93,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 100
+    globalScale: 0.01
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1

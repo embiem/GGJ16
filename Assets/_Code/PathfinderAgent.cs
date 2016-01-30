@@ -50,6 +50,9 @@ public class PathfinderAgent : MonoBehaviour
 
     public bool TargetReached { get { return targetReached; } }
 
+    private bool isCalculatingPath = false;
+    public bool CalculatingPath { get { return isCalculatingPath; } }
+
     private Vector3 velocity;
 
     public Vector3 Velocity { get { return velocity; } }
@@ -83,7 +86,10 @@ public class PathfinderAgent : MonoBehaviour
             GetComponent<Seeker>();
 
         if (seeker != null && transform != null && pTarget != null)
+        {
             seeker.StartPath(transform.position, pTarget.position, OnPathComplete, pGraphMask);
+            isCalculatingPath = true;
+        }
         else
         {
             Debug.LogWarning("Could not execute path, because transform = " + (transform == null).ToString() + " and target = " + (pTarget == null).ToString());
@@ -101,6 +107,7 @@ public class PathfinderAgent : MonoBehaviour
         FleePath fleePath = FleePath.Construct(transform.position, _fleeTarget.position, _fleeLength * 1000);
 
         seeker.StartPath(fleePath, OnPathComplete);
+        isCalculatingPath = true;
     }
 
     Vector3 currStartPoint; Vector3 currEndPoint;
@@ -143,6 +150,7 @@ public class PathfinderAgent : MonoBehaviour
             currentCallback(false);
             currentCallback = null;
         }
+        isCalculatingPath = false;
     }
 
     public void Update()
@@ -178,6 +186,7 @@ public class PathfinderAgent : MonoBehaviour
             else if (Time.time - lastRepath > repathRate && canRepath)
             {
                 seeker.StartPath(transform.position, currTarget.position, OnRepathComplete, currGraphMask);
+                isCalculatingPath = true;
                 canRepath = false;
             }
             else
@@ -285,6 +294,7 @@ public class PathfinderAgent : MonoBehaviour
         {
             Debug.Log(name + " - Path Error: Calculated Re-path was not reachable");
         }
+        isCalculatingPath = false;
     }
     #endregion
 

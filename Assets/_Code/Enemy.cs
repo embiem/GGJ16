@@ -12,7 +12,6 @@ public class Enemy : MonoBehaviour
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
-    bool isReachable = false;
     private Transform target;
     private EnemyState currState;
 
@@ -27,17 +26,13 @@ public class Enemy : MonoBehaviour
 
         myPathfinder.speed = NormalSpeed;
         currState = EnemyState.MovingAround;
-        MoveToRandomLocation();
-    }
-
-    void MoveToRandomLocation()
-    {
         myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
     }
 
     void OnPathCallback(bool reachable)
     {
-        isReachable = reachable;
+        if (!reachable)
+            Debug.LogWarning(name + ": Not Reachable Path");
     }
 
     void Update()
@@ -47,24 +42,28 @@ public class Enemy : MonoBehaviour
             switch (currState)
             {
                 case EnemyState.ChasingPlayer:
-                    if (GameManager.current.Player == null || !GameManager.current.Player.HasCollectable)
+                    if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
                     {
                         myPathfinder.speed = NormalSpeed;
-                        MoveToRandomLocation();
+                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
                         currState = EnemyState.MovingAround;
+                    }
+                    else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
+                    {
+                        myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
                     }
                     break;
                 default:
                 case EnemyState.MovingAround:
-                    if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable)
+                    if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && !myPathfinder.CalculatingPath)
                     {
                         myPathfinder.speed = FollowSpeed;
                         myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
                         currState = EnemyState.ChasingPlayer;
                     }
-                    else if (myPathfinder.TargetReached && isReachable)
+                    else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
                     {
-                        MoveToRandomLocation();
+                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
                     }
                     break;
             }
