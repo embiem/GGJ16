@@ -20,13 +20,18 @@ public class GameManager : MonoBehaviour
     public string CurrentScene;
     public int NeededScore;
 
-    private bool ingame;
+    private bool ingame; public bool IsIngame { get { return ingame; } }
+    private GameObject player; public GameObject Player { get { return player; } }
 
     IEnumerator Start()
     {
-        SceneManager.LoadScene(CurrentScene, LoadSceneMode.Additive);
+        AsyncOperation async = SceneManager.LoadSceneAsync(CurrentScene, LoadSceneMode.Additive);
 
-        yield return new WaitForEndOfFrame();
+        while (!async.isDone)
+            yield return new WaitForEndOfFrame();
+
+        player = GameObject.FindGameObjectWithTag("Player");
+        Debug.Log(Player);
 
         ingame = true;
     }

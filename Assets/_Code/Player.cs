@@ -35,24 +35,27 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (GameManager.current.IsIngame)
         {
-            RaycastHit hit;
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
+            if (Input.GetMouseButtonDown(0))
             {
-                target.position = hit.point;
-                myPathfinder.NewTarget(target, myPathCallback);
+                RaycastHit hit;
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
+                {
+                    target.position = hit.point;
+                    myPathfinder.NewTarget(target, myPathCallback);
 
-                SelectionRing.transform.position = hit.point + Vector3.up;
-                SelectionRing.transform.localScale = Vector3.zero;
+                    SelectionRing.transform.position = hit.point + Vector3.up;
+                    SelectionRing.transform.localScale = Vector3.zero;
 
-                LeanTween.cancel(SelectionRing);
-                LeanTween.scale(SelectionRing, Vector3.one, 1f).setOnComplete(ResetSelectionRing);
-            }
-            else
-            {
-                Debug.Log("Raycast didn't hit anything!");
+                    LeanTween.cancel(SelectionRing);
+                    LeanTween.scale(SelectionRing, Vector3.one, 1f).setOnComplete(ResetSelectionRing);
+                }
+                else
+                {
+                    Debug.Log("Raycast didn't hit anything!");
+                }
             }
         }
 
