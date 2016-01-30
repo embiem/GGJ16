@@ -52,7 +52,7 @@ ModelImporter:
     400042: wizard
     400044: //RootNode
     4300000: wizard
-    7400000: Take 001
+    7400000: WizardWalk
     9500000: //RootNode
     13700000: wizard
   materials:
@@ -77,7 +77,7 @@ ModelImporter:
     extraExposedTransformPaths: []
     clipAnimations:
     - serializedVersion: 16
-      name: Take 001
+      name: WizardWalk
       takeName: Take 001
       firstFrame: 1
       lastFrame: 60
