@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     public int NeededScore;
 
     private bool ingame; public bool IsIngame { get { return ingame; } }
-    private GameObject player; public GameObject Player { get { return player; } }
+    private Player player; public Player Player { get { return player; } }
 
     IEnumerator Start()
     {
@@ -30,8 +30,7 @@ public class GameManager : MonoBehaviour
         while (!async.isDone)
             yield return new WaitForEndOfFrame();
 
-        player = GameObject.FindGameObjectWithTag("Player");
-        Debug.Log(Player);
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 
         ingame = true;
     }

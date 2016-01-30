@@ -57,6 +57,10 @@ public class Player : MonoBehaviour
                     Debug.Log("Raycast didn't hit anything!");
                 }
             }
+            else if (Input.GetMouseButtonDown(1) && HasCollectable)
+            {
+                PutDownCollectable();
+            }
         }
 
         PS.emissionRate = myPathfinder.Velocity.magnitude * 15;
@@ -98,5 +102,11 @@ public class Player : MonoBehaviour
     {
         currCollectable = collectableItem;
         currCollectable.transform.parent = transform;
+    }
+
+    private void PutDownCollectable()
+    {
+        currCollectable.transform.parent = null;
+        currCollectable = null;
     }
 }
