@@ -61,7 +61,7 @@ public class Enemy : MonoBehaviour
                     if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
                     {
                         myPathfinder.speed = NormalSpeed;
-                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(50, 100));
+                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
                         currState = EnemyState.MovingAround;
                     }
                     else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
@@ -79,7 +79,7 @@ public class Enemy : MonoBehaviour
                     }
                     else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
                     {
-                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(50, 100));
+                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
                     }
                     break;
             }
@@ -117,8 +117,9 @@ public class Enemy : MonoBehaviour
     }
 
 
-    public void OnSlow (float forSeconds)
+    public void OnSlow (float forSeconds, GameObject zzParticle)
     {
+        currEffectParticle = zzParticle;
         currSlowLength = forSeconds;
         slowTimer = 0;
         myPathfinder.speed = SlowedSpeed;

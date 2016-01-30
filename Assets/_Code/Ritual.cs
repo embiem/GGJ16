@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Ritual : MonoBehaviour 
 {
+    public GameObject ItemAddedParticle;
+
     private int currScore = 0;
     public int CurrentScore
     {
@@ -24,5 +26,14 @@ public class Ritual : MonoBehaviour
 
         if (CurrentScore >= GameManager.current.NeededScore)
             GameManager.current.OnWin();
+
+        ItemAddedParticle.SetActive(true);
+        StartCoroutine(DeactivateParticle());
+    }
+
+    IEnumerator DeactivateParticle()
+    {
+        yield return new WaitForSeconds(3f);
+        ItemAddedParticle.SetActive(false);
     }
 }
