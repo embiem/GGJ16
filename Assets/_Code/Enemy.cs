@@ -31,6 +31,23 @@ public class Enemy : MonoBehaviour
 
 	private Transform target;
 	private EnemyState currState;
+    public EnemyState CurrrentState
+    {
+        get { return currState; }
+
+        set
+        {
+            if (currState != value)
+            {
+                currState = value;
+                if (currState == EnemyState.ChasingPlayer)
+                    GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f }, 1f);
+                else
+                    if (currState == EnemyState.MovingAround)
+                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f }, 1f);
+            }
+        }
+    }
 
 	private float currSlowLength;
 	private float slowTimer;
@@ -47,7 +64,7 @@ public class Enemy : MonoBehaviour
 			yield return new WaitForEndOfFrame ();
 
 		myPathfinder.speed = NormalSpeed;
-		currState = EnemyState.MovingAround;
+		CurrrentState = EnemyState.MovingAround;
 		myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
 
         KittyRenderer.material.SetTexture("_MainTex", KittyTextures[Random.Range(0, KittyTextures.Length)]);
@@ -69,13 +86,14 @@ public class Enemy : MonoBehaviour
 #endif
 
 			if (!hasSlowEffect) {
-				switch (currState) {
+                switch (CurrrentState)
+                {
 				case EnemyState.ChasingPlayer:
 					if (GameManager.current.Player != null && GameManager.current.Bait.Detectable && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
 						// seek bait
 						myPathfinder.speed = FollowSpeed;
 						myPathfinder.NewTarget(GameManager.current.Bait.transform, myPathCallback, -1, true);
-						currState = EnemyState.ChasingBait;
+                        CurrrentState = EnemyState.ChasingBait;
 					} else if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath) {
 						Wander();
 					} else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
@@ -88,11 +106,11 @@ public class Enemy : MonoBehaviour
 						// seek bait
 						myPathfinder.speed = FollowSpeed;
 						myPathfinder.NewTarget(GameManager.current.Bait.transform, myPathCallback, -1, true);
-						currState = EnemyState.ChasingBait;
+                        CurrrentState = EnemyState.ChasingBait;
 					} else if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath) {
 						myPathfinder.speed = FollowSpeed;
 						myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
-						currState = EnemyState.ChasingPlayer;
+                        CurrrentState = EnemyState.ChasingPlayer;
 					} else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
 						// last random target reached, prepare new random target
 						myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
@@ -116,7 +134,7 @@ public class Enemy : MonoBehaviour
 			if (hasSlowEffect) {
 				slowTimer += Time.deltaTime;
 				if (slowTimer > currSlowLength) {
-					myPathfinder.speed = (currState == EnemyState.ChasingPlayer ? FollowSpeed : NormalSpeed);
+                    myPathfinder.speed = (CurrrentState == EnemyState.ChasingPlayer ? FollowSpeed : NormalSpeed);
 					hasSlowEffect = false;
 					currSlowLength = 0f;
 
@@ -141,7 +159,7 @@ public class Enemy : MonoBehaviour
 	{
 		myPathfinder.speed = NormalSpeed;
 		myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
-		currState = EnemyState.MovingAround;
+        CurrrentState = EnemyState.MovingAround;
 	}
 
 	#endregion

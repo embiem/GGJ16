@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour
     public string CurrentScene;
     public int NeededScore;
 
+    [Header("Sounds")]
+    public UnityEngine.Audio.AudioMixer SoundMixer;
+    public UnityEngine.Audio.AudioMixerSnapshot[] SoundSnapshots;
+
     private bool ingame; public bool IsIngame { get { return ingame; } }
     private Player player; public Player Player { get { return player; } }
 	public Bait Bait { get { return player.Bait; } }
