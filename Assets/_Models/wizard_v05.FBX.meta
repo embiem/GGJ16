@@ -50,7 +50,8 @@ ModelImporter:
     400040: wizard
     400042: //RootNode
     4300000: wizard
-    7400000: Take 001
+    7400000: Walk
+    7400002: Idle
     9500000: //RootNode
     13700000: wizard
   materials:
@@ -73,7 +74,151 @@ ModelImporter:
     animationScaleError: 0.5
     animationWrapMode: 0
     extraExposedTransformPaths: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Walk
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 60
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/chest
+        weight: 1
+      - path: root01/chest/head01
+        weight: 1
+      - path: root01/chest/head01/hat01
+        weight: 1
+      - path: root01/chest/head01/hat01/hat02
+        weight: 1
+      - path: root01/chest/head01/hat01/hat02/hat03
+        weight: 1
+      - path: root01/chest/head01/l_eyebrow01
+        weight: 1
+      - path: root01/chest/head01/nose01
+        weight: 1
+      - path: root01/chest/head01/r_eyebrow01
+        weight: 1
+      - path: root01/chest/l_shoulder01
+        weight: 1
+      - path: root01/chest/l_shoulder01/l_elbow01
+        weight: 1
+      - path: root01/chest/l_shoulder01/l_elbow01/l_wrist01
+        weight: 1
+      - path: root01/chest/l_shoulder01/l_elbow01/l_wrist01/l_hand01
+        weight: 1
+      - path: root01/chest/r_shoulder01
+        weight: 1
+      - path: root01/chest/r_shoulder01/r_elbow01
+        weight: 1
+      - path: root01/chest/r_shoulder01/r_elbow01/r_wrist01
+        weight: 1
+      - path: root01/chest/r_shoulder01/r_elbow01/r_wrist01/r_hand01
+        weight: 1
+      - path: root01/hip
+        weight: 1
+      - path: root01/hip/tail01
+        weight: 1
+      - path: root01/hip/tail01/tail02
+        weight: 1
+      - path: wizard
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Idle
+      takeName: Take 001
+      firstFrame: 61
+      lastFrame: 150
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/chest
+        weight: 1
+      - path: root01/chest/head01
+        weight: 1
+      - path: root01/chest/head01/hat01
+        weight: 1
+      - path: root01/chest/head01/hat01/hat02
+        weight: 1
+      - path: root01/chest/head01/hat01/hat02/hat03
+        weight: 1
+      - path: root01/chest/head01/l_eyebrow01
+        weight: 1
+      - path: root01/chest/head01/nose01
+        weight: 1
+      - path: root01/chest/head01/r_eyebrow01
+        weight: 1
+      - path: root01/chest/l_shoulder01
+        weight: 1
+      - path: root01/chest/l_shoulder01/l_elbow01
+        weight: 1
+      - path: root01/chest/l_shoulder01/l_elbow01/l_wrist01
+        weight: 1
+      - path: root01/chest/l_shoulder01/l_elbow01/l_wrist01/l_hand01
+        weight: 1
+      - path: root01/chest/r_shoulder01
+        weight: 1
+      - path: root01/chest/r_shoulder01/r_elbow01
+        weight: 1
+      - path: root01/chest/r_shoulder01/r_elbow01/r_wrist01
+        weight: 1
+      - path: root01/chest/r_shoulder01/r_elbow01/r_wrist01/r_hand01
+        weight: 1
+      - path: root01/hip
+        weight: 1
+      - path: root01/hip/tail01
+        weight: 1
+      - path: root01/hip/tail01/tail02
+        weight: 1
+      - path: wizard
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 1
   meshes:
     lODScreenPercentages: []
