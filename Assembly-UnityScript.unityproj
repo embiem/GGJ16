@@ -54,13 +54,14 @@
      <Compile Include="Assets\LeanTween\Examples\Scripts\OldGUISlideImageIn.js" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\PathLocalCurveJS.js" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingAllJS.js" />
+     <None Include="Assets\_Code\Shaders\EasyPeasy.shader" />
      <None Include="Assets\AstarPathfindingProject\Editor\EditorAssets\Materials\Navmesh2.shader" />
-     <None Include="Assets\_Code\Shaders\VertexColor.shader" />
      <None Include="Assets\LeanTween\Examples\Shader\2dUnlitWithFade.shader" />
      <None Include="Assets\AstarPathfindingProject\Plugins\DotNetZip\DotNetZipLicense.txt" />
      <None Include="Assets\AstarPathfindingProject\Plugins\Poly2Tri\Poly2TriLicense.txt" />
      <None Include="Assets\AstarPathfindingProject\ExampleScenes\Materials\Projector Multiply.shader" />
      <None Include="Assets\LeanTween\ReadMe.txt" />
+     <None Include="Assets\_Code\Shaders\SuperDuper.shader" />
      <None Include="Assets\AstarPathfindingProject\ExampleScenes\Materials\DiffuseAlwaysVisible.shader" />
      <None Include="Assets\AstarPathfindingProject\Plugins\dependencies.txt" />
      <None Include="Assets\AstarPathfindingProject\ExampleScenes\_Example Scenes.txt" />
@@ -81,14 +82,14 @@
  <Reference Include="Pathfinding.ClipperLib">
  <HintPath>F:/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Plugins/Clipper/Pathfinding.ClipperLib.dll</HintPath>
  </Reference>
- <Reference Include="Pathfinding.Poly2Tri">
- <HintPath>F:/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Plugins/Poly2Tri/Pathfinding.Poly2Tri.dll</HintPath>
+ <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+ <HintPath>F:/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Plugins/DotNetZip/Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
  </Reference>
  <Reference Include="Pathfinding.JsonFx">
  <HintPath>F:/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Plugins/JsonFx/Pathfinding.JsonFx.dll</HintPath>
  </Reference>
- <Reference Include="Pathfinding.Ionic.Zip.Reduced">
- <HintPath>F:/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Plugins/DotNetZip/Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+ <Reference Include="Pathfinding.Poly2Tri">
+ <HintPath>F:/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Plugins/Poly2Tri/Pathfinding.Poly2Tri.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>
