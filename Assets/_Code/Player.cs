@@ -310,7 +310,7 @@ public class Player : MonoBehaviour
 			Bait.Spawn(BaitAnchor.position, transform.rotation);
 
 			// Tween bait toward target
-			LeanTween.move(Bait.gameObject, targetPosition, BaitThrowTime).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() => Bait.SetDetectable(true));
+			LeanTween.move(Bait.gameObject, targetPosition, BaitThrowTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
 		}
 
 	}
