@@ -316,6 +316,7 @@ public class Player : MonoBehaviour
     {
         if (Time.time - lastTimeTossed > 2f)
         {
+            collectableItem.Take();
             currCollectable = collectableItem;
             currCollectable.transform.parent = transform;
             myPathfinder.speed = SlowSpeed;  // character slows down when holding item
