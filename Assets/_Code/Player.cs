@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public GameObject SelectionRing;
     public GameObject ZZParticle;
     public GameObject SlowParticle;
+    public GameObject TrapPrefab;
 
     [Header("Assignments")]
     public ParticleSystem PS;
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
     public float SpeedupLength = 4f;
 	public float BaitThrowDistance = 2f;
 	public float BaitThrowTime = 1f;
+    public int BombCount = 3;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -108,6 +110,12 @@ public class Player : MonoBehaviour
                     enemy.OnFreeze(4f, zz);
                 }
                     
+            }
+
+            if (Input.GetKeyDown(KeyCode.Alpha3) && BombCount > 0)
+            {
+                GameObject.Instantiate(TrapPrefab, transform.position, Quaternion.identity);
+                BombCount--;
             }
 
             if (hasFastEffect)

@@ -56,9 +56,12 @@ public class Enemy : MonoBehaviour
 
 	void Update ()
 	{
-		if (GameManager.current.IsIngame) {
-			if (Input.GetKeyDown(KeyCode.Alpha3))
+		if (GameManager.current.IsIngame)
+        {
+            #if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.Alpha9))
 				Die();
+#endif
 
 			if (!hasSlowEffect) {
 				switch (currState) {
@@ -143,6 +146,16 @@ public class Enemy : MonoBehaviour
 		if (target != null)
 			Destroy(target.gameObject);
 	}
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Trap")
+        {
+            Destroy(other.gameObject);
+            Die();
+        }
+    }
 
 
 	public void OnSlow (float forSeconds, GameObject zzParticle)
