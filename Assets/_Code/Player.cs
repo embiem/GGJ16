@@ -37,6 +37,7 @@ public class Player : MonoBehaviour
     #region Properties
 
     public bool HasCollectable { get { return currCollectable != null; } }
+//	public CollectableItem CurrCollectable { get { return currCollectable; } }
 
     #endregion
 
@@ -122,7 +123,7 @@ public class Player : MonoBehaviour
             }
             else if (Input.GetMouseButtonDown(1) && HasCollectable)
             {
-                PutDownCollectable();
+                GiveUpCollectable();
             }
         }
 
@@ -185,7 +186,25 @@ public class Player : MonoBehaviour
         currCollectable.transform.parent = transform;
     }
 
-    private void PutDownCollectable()
+	/// <summary>
+	/// Drop current collectible
+	/// </summary>
+	/// <returns>The collectible.</returns>
+	public CollectableItem DropCollectable () {
+		if (currCollectable != null)
+		{
+			CollectableItem item = currCollectable;
+			currCollectable.transform.parent = null;
+			currCollectable = null;
+			// TODO: box should fall or stick to ground level
+			return item;
+		}
+
+		Debug.LogWarning("Player character cannot drop feed block: no feed block in hand");
+		return null;
+	}
+
+    private void GiveUpCollectable()
     {
         if (currCollectable != null && Time.time - lastTimeTossed > 2f)
         {

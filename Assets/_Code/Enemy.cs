@@ -101,9 +101,11 @@ public class Enemy : MonoBehaviour
                 }
             }
 
-            if ( !(hasSlowEffect && myPathfinder.speed == 0) && GameManager.current.Player != null && Vector3.Distance(transform.position, GameManager.current.Player.transform.position) < LooseDistance)
+			// Cat takes feed block back when touching magician
+			if ( !(hasSlowEffect && myPathfinder.speed == 0) && GameManager.current.Player != null && GameManager.current.Player.HasCollectable && Vector3.Distance(transform.position, GameManager.current.Player.transform.position) < LooseDistance)
             {
-                GameManager.current.OnLoose();
+				Steal(GameManager.current.Player.DropCollectable());
+//                GameManager.current.OnLoose();
             }
         }
     }
@@ -146,8 +148,13 @@ public class Enemy : MonoBehaviour
         GameObject.Destroy(this.gameObject);
     }
 
-	bool IsWithinSensorRadius(Transform tr) {
+	bool IsWithinSensorRadius (Transform tr) {
 		Vector2 groundVectorToTr = (Vector2) (tr.position - transform.position);
 		return groundVectorToTr.sqrMagnitude < sensorRadius * sensorRadius;
+	}
+
+	void Steal (CollectableItem item) {
+//		item.transform.parent = null;
+		item.Reset();
 	}
 }
