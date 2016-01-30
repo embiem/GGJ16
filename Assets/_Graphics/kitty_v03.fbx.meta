@@ -47,6 +47,8 @@ ModelImporter:
     400038: tail05
     4300000: kitty
     7400000: KittyWalk
+    7400002: LieDown
+    7400004: Sleep
     9500000: //RootNode
     13700000: kitty
   materials:
@@ -74,7 +76,7 @@ ModelImporter:
       name: KittyWalk
       takeName: Take 001
       firstFrame: 0
-      lastFrame: 63
+      lastFrame: 62
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -82,6 +84,142 @@ ModelImporter:
       loop: 0
       hasAdditiveReferencePose: 0
       loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: kitty
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/spine
+        weight: 1
+      - path: root01/spine/chest01
+        weight: 1
+      - path: root01/spine/chest01/head01
+        weight: 1
+      - path: root01/spine/chest01/head01/headEnd01
+        weight: 1
+      - path: root01/spine/l_legBack
+        weight: 1
+      - path: root01/spine/l_legBack/l_footBack
+        weight: 1
+      - path: root01/spine/l_legFront
+        weight: 1
+      - path: root01/spine/l_legFront/l_footFront
+        weight: 1
+      - path: root01/spine/r_legBack
+        weight: 1
+      - path: root01/spine/r_legBack/r_footBack
+        weight: 1
+      - path: root01/spine/r_legFront
+        weight: 1
+      - path: root01/spine/r_legFront/r_footFront
+        weight: 1
+      - path: root01/spine/tail01
+        weight: 1
+      - path: root01/spine/tail01/tail02
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04/tail05
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: LieDown
+      takeName: Take 001
+      firstFrame: 63
+      lastFrame: 85
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: kitty
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/spine
+        weight: 1
+      - path: root01/spine/chest01
+        weight: 1
+      - path: root01/spine/chest01/head01
+        weight: 1
+      - path: root01/spine/chest01/head01/headEnd01
+        weight: 1
+      - path: root01/spine/l_legBack
+        weight: 1
+      - path: root01/spine/l_legBack/l_footBack
+        weight: 1
+      - path: root01/spine/l_legFront
+        weight: 1
+      - path: root01/spine/l_legFront/l_footFront
+        weight: 1
+      - path: root01/spine/r_legBack
+        weight: 1
+      - path: root01/spine/r_legBack/r_footBack
+        weight: 1
+      - path: root01/spine/r_legFront
+        weight: 1
+      - path: root01/spine/r_legFront/r_footFront
+        weight: 1
+      - path: root01/spine/tail01
+        weight: 1
+      - path: root01/spine/tail01/tail02
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04/tail05
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Sleep
+      takeName: Take 001
+      firstFrame: 100
+      lastFrame: 150
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0

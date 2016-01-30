@@ -15,6 +15,7 @@ public class Enemy : MonoBehaviour
 	public GameObject ExplosionPS;
     public Renderer KittyRenderer;
     public Texture[] KittyTextures;
+    public AudioSource ExplosionSound;
 
 	[Header("Balancing")]
 	public float LooseDistance = 1f;
@@ -182,6 +183,8 @@ public class Enemy : MonoBehaviour
 
 	public void Die ()
 	{
+        ExplosionSound.Play();
+        ExplosionSound.transform.parent = null;
 		myPathfinder.speed = 0f;
 		ExplosionPS.gameObject.SetActive(true);
 		ExplosionPS.transform.parent = null;

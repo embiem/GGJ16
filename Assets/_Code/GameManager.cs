@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
                     UserInterfaceManager.SkillSleepBtn.interactable = true;
 
             if (UserInterfaceManager.SkillBombBtn.interactable && Player.BombCount <= 0)
-                UserInterfaceManager.SkillSlowBtn.interactable = false;
+                UserInterfaceManager.SkillBombBtn.interactable = false;
         }
     }
 
