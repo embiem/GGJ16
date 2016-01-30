@@ -1,0 +1,321 @@
+fileFormatVersion: 2
+guid: 9312fe79ab2b5aa42b808517bd288091
+timeCreated: 1454162610
+licenseType: Free
+ModelImporter:
+  serializedVersion: 19
+  fileIDToRecycleName:
+    100000: chest01
+    100002: head01
+    100004: headEnd01
+    100006: kitty
+    100008: //RootNode
+    100010: l_footBack
+    100012: l_footFront
+    100014: l_legBack
+    100016: l_legFront
+    100018: r_footBack
+    100020: r_footFront
+    100022: r_legBack
+    100024: r_legFront
+    100026: root01
+    100028: spine
+    100030: tail01
+    100032: tail02
+    100034: tail03
+    100036: tail04
+    100038: tail05
+    400000: chest01
+    400002: head01
+    400004: headEnd01
+    400006: kitty
+    400008: //RootNode
+    400010: l_footBack
+    400012: l_footFront
+    400014: l_legBack
+    400016: l_legFront
+    400018: r_footBack
+    400020: r_footFront
+    400022: r_legBack
+    400024: r_legFront
+    400026: root01
+    400028: spine
+    400030: tail01
+    400032: tail02
+    400034: tail03
+    400036: tail04
+    400038: tail05
+    4300000: kitty
+    7400000: KittyWalk
+    7400002: LieDown
+    7400004: Sleep
+    9500000: //RootNode
+    13700000: kitty
+  materials:
+    importMaterials: 1
+    materialName: 0
+    materialSearch: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleRotations: 1
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: KittyWalk
+      takeName: Take 001
+      firstFrame: 0
+      lastFrame: 62
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 1
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: kitty
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/spine
+        weight: 1
+      - path: root01/spine/chest01
+        weight: 1
+      - path: root01/spine/chest01/head01
+        weight: 1
+      - path: root01/spine/chest01/head01/headEnd01
+        weight: 1
+      - path: root01/spine/l_legBack
+        weight: 1
+      - path: root01/spine/l_legBack/l_footBack
+        weight: 1
+      - path: root01/spine/l_legFront
+        weight: 1
+      - path: root01/spine/l_legFront/l_footFront
+        weight: 1
+      - path: root01/spine/r_legBack
+        weight: 1
+      - path: root01/spine/r_legBack/r_footBack
+        weight: 1
+      - path: root01/spine/r_legFront
+        weight: 1
+      - path: root01/spine/r_legFront/r_footFront
+        weight: 1
+      - path: root01/spine/tail01
+        weight: 1
+      - path: root01/spine/tail01/tail02
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04/tail05
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: LieDown
+      takeName: Take 001
+      firstFrame: 63
+      lastFrame: 85
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: kitty
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/spine
+        weight: 1
+      - path: root01/spine/chest01
+        weight: 1
+      - path: root01/spine/chest01/head01
+        weight: 1
+      - path: root01/spine/chest01/head01/headEnd01
+        weight: 1
+      - path: root01/spine/l_legBack
+        weight: 1
+      - path: root01/spine/l_legBack/l_footBack
+        weight: 1
+      - path: root01/spine/l_legFront
+        weight: 1
+      - path: root01/spine/l_legFront/l_footFront
+        weight: 1
+      - path: root01/spine/r_legBack
+        weight: 1
+      - path: root01/spine/r_legBack/r_footBack
+        weight: 1
+      - path: root01/spine/r_legFront
+        weight: 1
+      - path: root01/spine/r_legFront/r_footFront
+        weight: 1
+      - path: root01/spine/tail01
+        weight: 1
+      - path: root01/spine/tail01/tail02
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04/tail05
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: Sleep
+      takeName: Take 001
+      firstFrame: 100
+      lastFrame: 150
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask:
+      - path: 
+        weight: 1
+      - path: kitty
+        weight: 1
+      - path: root01
+        weight: 1
+      - path: root01/spine
+        weight: 1
+      - path: root01/spine/chest01
+        weight: 1
+      - path: root01/spine/chest01/head01
+        weight: 1
+      - path: root01/spine/chest01/head01/headEnd01
+        weight: 1
+      - path: root01/spine/l_legBack
+        weight: 1
+      - path: root01/spine/l_legBack/l_footBack
+        weight: 1
+      - path: root01/spine/l_legFront
+        weight: 1
+      - path: root01/spine/l_legFront/l_footFront
+        weight: 1
+      - path: root01/spine/r_legBack
+        weight: 1
+      - path: root01/spine/r_legBack/r_footBack
+        weight: 1
+      - path: root01/spine/r_legFront
+        weight: 1
+      - path: root01/spine/r_legFront/r_footFront
+        weight: 1
+      - path: root01/spine/tail01
+        weight: 1
+      - path: root01/spine/tail01/tail02
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04
+        weight: 1
+      - path: root01/spine/tail01/tail02/tail03/tail04/tail05
+        weight: 1
+      maskType: 0
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 2
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

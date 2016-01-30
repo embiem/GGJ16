@@ -37,10 +37,16 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
+    
+    [Header("Skills")]
 	public float ThrowBaitDistance = 2f;
 	public float ThrowBaitTime = 0.5f;  // time until bait reaches ground
-	public float ThrowBaitLag = 1f;  // tiime during which character cannot move
+	public float ThrowBaitLag = 1f;  // time during which character cannot move
     public int BombCount = 3;
+    public int MaxMana = 100;
+    public int ManaPerSecond = 2;
+    public int ManaCostSlow = 50;
+    public int ManaCostFreeze = 80;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -56,6 +62,9 @@ public class Player : MonoBehaviour
     private bool hasFastEffect;
     private GameObject currEffectParticle;
 
+    private int currMana; public int CurrentMana { get { return currMana; } }
+    private float lastManaIncrease;
+
 	private Collider[] overlapResults;
 
     #endregion
@@ -66,6 +75,8 @@ public class Player : MonoBehaviour
 //	public CollectableItem CurrCollectable { get { return currCollectable; } }
 
     #endregion
+
+    #region Main
 
     void Start()
     {
@@ -84,6 +95,10 @@ public class Player : MonoBehaviour
         Camera.main.GetComponent<CamMovement>().SetTarget(transform);
 
         FootPrintAS.clip = SlowWalkClip;
+
+		Bait.gameObject.SetActive(false);
+
+        currMana = MaxMana;
     }
 
 	public void DebugReset () {
@@ -96,43 +111,23 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
-                {
-                    GameObject zz = GameObject.Instantiate(SlowParticle);
-                    zz.transform.position = transform.position;
-
-                    Enemy temp = enemy;
-                    LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
-                    {
-                        zz.transform.position = temp.transform.position;
-                        zz.transform.parent = temp.transform;
-                    });
-                    enemy.OnSlow(6f, zz);
-                }
+                DoSlowSkill();
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
-                foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
-                {
-                    GameObject zz = GameObject.Instantiate(ZZParticle);
-                    zz.transform.position = transform.position;
-
-                    Enemy temp = enemy;
-                    LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
-                    {
-                        zz.transform.position = temp.transform.position;
-                        zz.transform.parent = temp.transform;
-                    });
-                    enemy.OnFreeze(4f, zz);
-                }
-                    
+                DoFreezeSkill();
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3) && BombCount > 0)
+            if (Input.GetKeyDown(KeyCode.Alpha3))
             {
-                GameObject.Instantiate(TrapPrefab, transform.position, Quaternion.identity);
-                BombCount--;
+                DoBombSkill();
+            }
+
+            if (Time.time - lastManaIncrease >= 1f)
+            {
+                currMana = Mathf.Clamp(currMana + ManaPerSecond, 0, MaxMana);
+                lastManaIncrease = Time.time + (Time.time - lastManaIncrease - 1f); // take difference into account
             }
 
             if (hasFastEffect)
@@ -153,7 +148,7 @@ public class Player : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
             {
                 RaycastHit hit;
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -277,6 +272,67 @@ public class Player : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Skills
+
+    public void DoSlowSkill()
+    {
+        if (CurrentMana >= ManaCostSlow)
+        {
+            currMana -= ManaCostSlow;
+
+            foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
+            {
+                GameObject zz = GameObject.Instantiate(SlowParticle);
+                zz.transform.position = transform.position;
+
+                Enemy temp = enemy;
+                LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
+                {
+                    zz.transform.position = temp.transform.position;
+                    zz.transform.parent = temp.transform;
+                });
+                enemy.OnSlow(6f, zz);
+            }
+        }
+    }
+
+    public void DoFreezeSkill()
+    {
+        if (CurrentMana >= ManaCostFreeze)
+        {
+            currMana -= ManaCostFreeze;
+
+            foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
+            {
+                GameObject zz = GameObject.Instantiate(ZZParticle);
+                zz.transform.position = transform.position;
+
+                Enemy temp = enemy;
+                LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
+                {
+                    zz.transform.position = temp.transform.position;
+                    zz.transform.parent = temp.transform;
+                });
+                enemy.OnFreeze(4f, zz);
+            }
+        }
+    }
+
+    public void DoBombSkill()
+    {
+        if (BombCount > 0)
+        {
+            GameObject.Instantiate(TrapPrefab, transform.position, Quaternion.identity);
+            BombCount--;
+        }
+    }
+
+    #endregion
+
+    #region Actions
+
     private void PickUpCollectable(CollectableItem collectableItem)
     {
         if (Time.time - lastTimeTossed > 2f)
@@ -287,7 +343,7 @@ public class Player : MonoBehaviour
         }
     }
 
-	/// <summary>
+    /// <summary>
 	/// Drop current collectible
 	/// </summary>
 	/// <returns>The collectible.</returns>
@@ -308,7 +364,7 @@ public class Player : MonoBehaviour
 	}
 
 	// TODO: refactor wirth DropCollectable
-    private void GiveUpCollectable()
+    public void GiveUpCollectable()
     {
         if (Time.time - lastTimeTossed > 2f)
         {
@@ -383,4 +439,6 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(0.2f);
         GameObject.Destroy(this.gameObject);
     }
+
+    #endregion
 }

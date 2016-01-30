@@ -44,6 +44,33 @@ public class GameManager : MonoBehaviour
         });
     }
 
+    void Update()
+    {
+        if (Player != null)
+        {
+            // Mana & Skills interface handling
+            UserInterfaceManager.TxtMana.text = Player.CurrentMana.ToString();
+
+            if (UserInterfaceManager.SkillSlowBtn.interactable && Player.CurrentMana < Player.ManaCostSlow)
+                UserInterfaceManager.SkillSlowBtn.interactable = false;
+            else
+                if (!UserInterfaceManager.SkillSlowBtn.interactable && Player.CurrentMana >= Player.ManaCostSlow)
+                    UserInterfaceManager.SkillSlowBtn.interactable = true;
+
+            if (UserInterfaceManager.SkillSleepBtn.interactable && Player.CurrentMana < Player.ManaCostFreeze)
+                UserInterfaceManager.SkillSleepBtn.interactable = false;
+            else
+                if (!UserInterfaceManager.SkillSleepBtn.interactable && Player.CurrentMana >= Player.ManaCostFreeze)
+                    UserInterfaceManager.SkillSleepBtn.interactable = true;
+
+            if (UserInterfaceManager.SkillBombBtn.interactable && Player.BombCount <= 0)
+                UserInterfaceManager.SkillBombBtn.interactable = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
+    }
+
     public void OnLoose()
     {
         if (ingame)
