@@ -66,6 +66,9 @@ public class GameManager : MonoBehaviour
             if (UserInterfaceManager.SkillBombBtn.interactable && Player.BombCount <= 0)
                 UserInterfaceManager.SkillBombBtn.interactable = false;
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+            Application.Quit();
     }
 
     public void OnLoose()
