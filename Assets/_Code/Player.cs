@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
+	public GameObject Bait;
     
     [Space(5f)]
     public AudioClip SlowWalkClip;
@@ -28,6 +29,7 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
+	public float baitThrowDistance = 2f;
     public int BombCount = 3;
 
     private PathfinderAgent myPathfinder;
@@ -65,6 +67,8 @@ public class Player : MonoBehaviour
         Camera.main.GetComponent<CamMovement>().SetTarget(transform);
 
         FootPrintAS.clip = SlowWalkClip;
+
+		Bait.SetActive(false);
     }
 
     void Update()
@@ -103,6 +107,7 @@ public class Player : MonoBehaviour
                     });
                     enemy.OnFreeze(4f, zz);
                 }
+                    
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha3) && BombCount > 0)
@@ -149,6 +154,9 @@ public class Player : MonoBehaviour
                     Debug.Log("Raycast didn't hit anything!");
                 }
             }
+			else if (Input.GetMouseButtonDown(1) && !HasCollectable) {
+				ThrowBait();
+			}
             else if (Input.GetMouseButtonDown(1) && HasCollectable)
             {
                 GiveUpCollectable();
@@ -262,6 +270,18 @@ public class Player : MonoBehaviour
             lastTimeTossed = Time.time;
         }
     }
+
+	/// Throw some bait toward to lure the cats (reuse same object)
+	private void ThrowBait() {
+		Bait.transform.parent = null;
+
+		Vector3 targetPosition = transform.position + transform.forward * baitThrowDistance;
+		targetPosition.y = 0.5f;
+		Bait.transform.position = targetPosition;
+		Bait.transform.rotation = Quaternion.identity;
+
+		Bait.SetActive(true);
+	}
 
     public void Die()
     {
