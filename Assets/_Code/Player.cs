@@ -268,7 +268,7 @@ public class Player : MonoBehaviour
 		Bait.transform.parent = null;
 
 		Vector3 targetPosition = transform.position + transform.forward * baitThrowDistance;
-		targetPosition.z = 0.5f;
+		targetPosition.y = 0.5f;
 		Bait.transform.position = targetPosition;
 		Bait.transform.rotation = Quaternion.identity;
 
