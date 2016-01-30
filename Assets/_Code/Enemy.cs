@@ -55,34 +55,35 @@ public class Enemy : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha3))
                 Die();
 
-            switch (currState)
-            {
-                case EnemyState.ChasingPlayer:
-                    if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
-                    {
-                        myPathfinder.speed = NormalSpeed;
-                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
-                        currState = EnemyState.MovingAround;
-                    }
-                    else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
-                    {
-                        myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
-                    }
-                    break;
-                default:
-                case EnemyState.MovingAround:
-				if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath)
-                    {
-                        myPathfinder.speed = FollowSpeed;
-                        myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
-                        currState = EnemyState.ChasingPlayer;
-                    }
-                    else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
-                    {
-                        myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
-                    }
-                    break;
-            }
+            if (!hasSlowEffect)
+                switch (currState)
+                {
+                    case EnemyState.ChasingPlayer:
+                        if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.speed = NormalSpeed;
+                            myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
+                            currState = EnemyState.MovingAround;
+                        }
+                        else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
+                        }
+                        break;
+                    default:
+                    case EnemyState.MovingAround:
+				    if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.speed = FollowSpeed;
+                            myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
+                            currState = EnemyState.ChasingPlayer;
+                        }
+                        else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
+                        }
+                        break;
+                }
 
             if (hasSlowEffect)
             {
