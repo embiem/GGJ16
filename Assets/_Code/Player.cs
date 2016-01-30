@@ -225,9 +225,12 @@ public class Player : MonoBehaviour
 
     private void PickUpCollectable(CollectableItem collectableItem)
     {
-        currCollectable = collectableItem;
-        currCollectable.transform.parent = transform;
-		myPathfinder.speed = SlowSpeed;  // character slows down when holding item
+        if (Time.time - lastTimeTossed > 2f)
+        {
+            currCollectable = collectableItem;
+            currCollectable.transform.parent = transform;
+            myPathfinder.speed = SlowSpeed;  // character slows down when holding item
+        }
     }
 
 	/// <summary>
@@ -237,6 +240,7 @@ public class Player : MonoBehaviour
 	public CollectableItem DropCollectable () {
 		if (currCollectable != null)
 		{
+            lastTimeTossed = Time.time;
 			CollectableItem item = currCollectable;
 			currCollectable.transform.parent = null;
 			currCollectable = null;

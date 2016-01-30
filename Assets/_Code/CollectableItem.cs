@@ -14,7 +14,9 @@ public class CollectableItem : MonoBehaviour
 
     public void Reset()
     {
-        transform.position = startPos;
-        transform.rotation = startRot;
+        LeanTween.move(this.gameObject, startPos, 2f).setEase(LeanTweenType.easeInOutCirc);
+        LeanTween.rotate(this.gameObject, Quaternion.ToEulerAngles(startRot), 2f);
+        //transform.position = startPos;
+        //transform.rotation = startRot;
     }
 }

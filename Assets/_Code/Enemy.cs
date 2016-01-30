@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Enemy : MonoBehaviour
 {
-    public enum EnemyState { MovingAround, ChasingPlayer, ChasingBait }
+    public enum EnemyState { MovingAround, ChasingPlayer }
 
     [Header("Assignments")]
     public GameObject ExplosionPS;
@@ -55,59 +55,35 @@ public class Enemy : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha3))
                 Die();
 
-            switch (currState)
-            {
-            case EnemyState.ChasingPlayer:
-				if (GameManager.current.Player != null && GameManager.current.Bait.activeSelf && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
-					// seek bait
-					myPathfinder.speed = FollowSpeed;
-					myPathfinder.NewTarget(GameManager.current.Bait.transform, myPathCallback, -1, true);
-					currState = EnemyState.ChasingBait;
-				}
-                else if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
+            if (!hasSlowEffect)
+                switch (currState)
                 {
-					Wander();
+                    case EnemyState.ChasingPlayer:
+                        if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.speed = NormalSpeed;
+                            myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
+                            currState = EnemyState.MovingAround;
+                        }
+                        else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
+                        }
+                        break;
+                    default:
+                    case EnemyState.MovingAround:
+				    if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.speed = FollowSpeed;
+                            myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
+                            currState = EnemyState.ChasingPlayer;
+                        }
+                        else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
+                        {
+                            myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
+                        }
+                        break;
                 }
-                else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
-                {
-                    myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
-                }
-                break;
-            default:
-            case EnemyState.MovingAround:
-				if (GameManager.current.Player != null && GameManager.current.Bait.activeSelf && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
-					// seek bait
-					myPathfinder.speed = FollowSpeed;
-					myPathfinder.NewTarget(GameManager.current.Bait.transform, myPathCallback, -1, true);
-					currState = EnemyState.ChasingBait;
-				}
-			    else if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath)
-                {
-                    myPathfinder.speed = FollowSpeed;
-                    myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
-                    currState = EnemyState.ChasingPlayer;
-                }
-                else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
-                {
-					// last random target reached, prepare new random target
-                    myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
-                }
-                break;
-			case EnemyState.ChasingBait:
-				if (GameManager.current.Player == null || GameManager.current.Player != null && !GameManager.current.Bait.activeSelf ||
-					GameManager.current.Player != null && GameManager.current.Bait.activeSelf && !IsWithinSensorRadius(GameManager.current.Bait.transform)) {
-					// give up on bait (or bait does not exist anymore) -> wander
-					Wander();
-				}
-				else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath)
-				{
-					Debug.Log("target reached");
-					// if bait has not moved or continuous path recomputation, target reached should work; else use a trigger
-					Eat(GameManager.current.Bait);
-					Wander();
-				}
-				break;
-            }
 
             if (hasSlowEffect)
             {
@@ -134,16 +110,6 @@ public class Enemy : MonoBehaviour
             }
         }
     }
-
-	#region StateMethods
-
-	void Wander () {
-		myPathfinder.speed = NormalSpeed;
-		myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
-		currState = EnemyState.MovingAround;
-	}
-
-	#endregion
 
     void OnDisable()
     {
@@ -192,9 +158,5 @@ public class Enemy : MonoBehaviour
 	void Steal (CollectableItem item) {
 //		item.transform.parent = null;
 		item.Reset();
-	}
-
-	void Eat (GameObject bait) {
-		bait.SetActive(false);
 	}
 }
