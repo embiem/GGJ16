@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     private bool ingame; public bool IsIngame { get { return ingame; } }
     private Player player; public Player Player { get { return player; } }
-	public GameObject Bait { get { return player.Bait; } }
+	public Bait Bait { get { return player.Bait; } }
 
     IEnumerator Start()
     {

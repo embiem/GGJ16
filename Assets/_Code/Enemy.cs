@@ -66,7 +66,7 @@ public class Enemy : MonoBehaviour
 			if (!hasSlowEffect) {
 				switch (currState) {
 				case EnemyState.ChasingPlayer:
-					if (GameManager.current.Player != null && GameManager.current.Bait.activeSelf && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
+					if (GameManager.current.Player != null && GameManager.current.Bait.Detectable && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
 						// seek bait
 						myPathfinder.speed = FollowSpeed;
 						myPathfinder.NewTarget(GameManager.current.Bait.transform, myPathCallback, -1, true);
@@ -79,7 +79,7 @@ public class Enemy : MonoBehaviour
 					break;
 				default:
 				case EnemyState.MovingAround:
-					if (GameManager.current.Player != null && GameManager.current.Bait.activeSelf && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
+					if (GameManager.current.Player != null && GameManager.current.Bait.Detectable && IsWithinSensorRadius(GameManager.current.Bait.transform)) {
 						// seek bait
 						myPathfinder.speed = FollowSpeed;
 						myPathfinder.NewTarget(GameManager.current.Bait.transform, myPathCallback, -1, true);
@@ -94,8 +94,8 @@ public class Enemy : MonoBehaviour
 					}
 					break;
 				case EnemyState.ChasingBait:
-					if (GameManager.current.Player == null || GameManager.current.Player != null && !GameManager.current.Bait.activeSelf ||
-					    GameManager.current.Player != null && GameManager.current.Bait.activeSelf && !IsWithinSensorRadius(GameManager.current.Bait.transform)) {
+					if (GameManager.current.Player == null || GameManager.current.Player != null && !GameManager.current.Bait.Detectable ||
+						GameManager.current.Player != null && GameManager.current.Bait.Detectable && !IsWithinSensorRadius(GameManager.current.Bait.transform)) {
 						// give up on bait (or bait does not exist anymore) -> wander
 						Wander();
 					} else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
@@ -202,8 +202,8 @@ public class Enemy : MonoBehaviour
 		item.Reset();
 	}
 
-	void Eat (GameObject bait)
+	void Eat (Bait bait)
 	{
-		bait.SetActive(false);
+		bait.Despawn();
 	}
 }

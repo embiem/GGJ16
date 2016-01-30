@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
-	public GameObject Bait;
+	public Bait Bait;
 	public Transform BaitAnchor;
     
     [Space(5f)]
@@ -69,8 +69,6 @@ public class Player : MonoBehaviour
         Camera.main.GetComponent<CamMovement>().SetTarget(transform);
 
         FootPrintAS.clip = SlowWalkClip;
-
-		Bait.SetActive(false);
     }
 
     void Update()
@@ -275,17 +273,23 @@ public class Player : MonoBehaviour
 
 	/// Throw some bait toward to lure the cats (reuse same object)
 	private void ThrowBait() {
-		// Move bait to bait anchor (starting position)
-		Bait.transform.parent = null;
-		Bait.transform.position = BaitAnchor.transform.position;
-		Bait.transform.rotation = transform.rotation;
+		// Cannot send more than 1 bait at once
+		if (!Bait.gameObject.activeSelf) {
+			// Raycast check
+			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+				Debug.Log("Raycast detected obstacle, cannot throw bait");
+				return;
+			}
 
-		// Target position is in front of character, but just on ground
-		Vector3 targetPosition = BaitAnchor.position + transform.forward * BaitThrowDistance;
-		targetPosition.y = 0f;
+			// Target position is in front of character, but just on ground
+			Vector3 targetPosition = BaitAnchor.position + transform.forward * BaitThrowDistance;
+			targetPosition.y = 0f;
 
-		// Tween bait toward target
-//		LeanTween.move(Bait, targetPosition, BaitThrowTime).setEase(LeanTweenType.easeInOutQuad).setOnComplete(Bait.GetComponent<Bait>().Land);
+			Bait.Spawn(BaitAnchor.position, transform.rotation);
+
+			// Tween bait toward target
+			LeanTween.move(Bait.gameObject, targetPosition, BaitThrowTime).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() => Bait.SetDetectable(true));
+		}
 
 	}
 
