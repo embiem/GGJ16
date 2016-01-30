@@ -27,6 +27,7 @@ ModelImporter:
     100038: tail02
     100040: wizard
     100042: //RootNode
+    100044: rootCC
     400000: chest
     400002: hat01
     400004: hat02
@@ -49,6 +50,7 @@ ModelImporter:
     400038: tail02
     400040: wizard
     400042: //RootNode
+    400044: rootCC
     2300000: wizard
     3300000: wizard
     4300000: wizard

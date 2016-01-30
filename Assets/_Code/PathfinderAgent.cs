@@ -104,6 +104,8 @@ public class PathfinderAgent : MonoBehaviour
             currentCallback(false);
         currentCallback = _callback;
 
+        currTarget = null;
+
         FleePath fleePath = FleePath.Construct(transform.position, _fleeTarget.position, _fleeLength * 1000);
 
         seeker.StartPath(fleePath, OnPathComplete);

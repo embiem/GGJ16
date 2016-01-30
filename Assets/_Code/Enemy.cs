@@ -5,6 +5,10 @@ public class Enemy : MonoBehaviour
 {
     public enum EnemyState { MovingAround, ChasingPlayer }
 
+    [Header("Assignments")]
+    public GameObject ExplosionPS;
+
+    [Header("Balancing")]
     public float LooseDistance = 1f;
     public float SlowedSpeed = 2;
     public float NormalSpeed = 4;
@@ -45,6 +49,9 @@ public class Enemy : MonoBehaviour
     {
         if (GameManager.current.IsIngame)
         {
+            if (Input.GetKeyDown(KeyCode.Alpha3))
+                Die();
+
             switch (currState)
             {
                 case EnemyState.ChasingPlayer:
@@ -120,5 +127,19 @@ public class Enemy : MonoBehaviour
         slowTimer = 0;
         myPathfinder.speed = 0f;
         hasSlowEffect = true;
+    }
+
+    public void Die()
+    {
+        myPathfinder.speed = 0f;
+        ExplosionPS.gameObject.SetActive(true);
+        ExplosionPS.transform.parent = null;
+        StartCoroutine(DieCoRo());
+    }
+
+    IEnumerator DieCoRo()
+    {
+        yield return new WaitForSeconds(0.1f);
+        GameObject.Destroy(this.gameObject);
     }
 }

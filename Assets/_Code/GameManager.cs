@@ -40,8 +40,10 @@ public class GameManager : MonoBehaviour
         if (ingame)
         {
             ingame = false;
-            UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU LOOSE. HAHAHA!";
-            UserInterfaceManager.WinLooseWindow.Open();
+
+            Player.Die();
+
+            StartCoroutine(ShowEndGame());
         }
     }
 
@@ -53,6 +55,14 @@ public class GameManager : MonoBehaviour
             UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU WON, congrats.";
             UserInterfaceManager.WinLooseWindow.Open();
         }
+    }
+
+    IEnumerator ShowEndGame()
+    {
+        yield return new WaitForSeconds(2f);
+
+        UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU LOOSE. HAHAHA!";
+        UserInterfaceManager.WinLooseWindow.Open();
     }
 
     public void OnScoreUpdated(int newScore)

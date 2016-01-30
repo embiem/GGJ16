@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     [Header("Assignments")]
     public ParticleSystem PS;
     public Animator myAnim;
+    public GameObject BurnDownParticle;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -158,5 +159,19 @@ public class Player : MonoBehaviour
             currCollectable = null;
             lastTimeTossed = Time.time;
         }
+    }
+
+    public void Die()
+    {
+        myPathfinder.speed = 0f;
+        BurnDownParticle.gameObject.SetActive(true);
+        BurnDownParticle.transform.parent = null;
+        StartCoroutine(DieCoRo());
+    }
+
+    IEnumerator DieCoRo()
+    {
+        yield return new WaitForSeconds(0.2f);
+        GameObject.Destroy(this.gameObject);
     }
 }
