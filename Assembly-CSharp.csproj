@@ -182,6 +182,7 @@
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingEverything.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingPunch.cs" />
      <Compile Include="Assets\LeanTween\Examples\Scripts\TestingRigidbodyCS.cs" />
+     <Compile Include="Assets\Lightshafts.cs" />
      <Compile Include="Assets\SSAO Pro\Demo\Scripts\DemoUI.cs" />
      <Compile Include="Assets\SSAO Pro\Demo\Scripts\RotateAround.cs" />
      <Compile Include="Assets\SSAO Pro\Scripts\SSAOPro.cs" />
