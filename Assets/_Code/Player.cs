@@ -24,9 +24,8 @@ public class Player : MonoBehaviour
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
-	public Bait Bait;
-	public Transform BaitAnchor;
-    
+//	public Transform BaitAnchor;
+	    
     [Space(5f)]
     public AudioClip SlowWalkClip;
     public AudioClip FastWalkClip;
@@ -102,13 +101,12 @@ public class Player : MonoBehaviour
 
         FootPrintAS.clip = SlowWalkClip;
 
-		Bait.gameObject.SetActive(false);
-
         currMana = MaxMana;
     }
 
 	public void DebugReset () {
-		Bait.Despawn();
+		currMana = MaxMana;
+		lastManaIncrease = -100f;
 	}
 
     void Update()
@@ -346,63 +344,60 @@ public class Player : MonoBehaviour
     }
 
 	/// Throw some bait toward to lure the cats (reuse same object), toward target look position (zero vector for forward)
-	public void DoBaitSkill(Vector3 targetLookPos) {
-		// Cannot send more than 1 bait at once
-		if (Bait.gameObject.activeSelf) return;
-
+	public void DoBaitSkill(Vector3 spawnPoint) {
 		if (CurrentMana >= ManaCostBait)
 		{
-			currMana -= ManaCostBait;
-
-			if (targetLookPos == Vector3.zero) {
-				// by default, throw toward
-				targetLookPos = transform.position + transform.forward * 1f;
-				targetLookPos.y = 0f;
-			}
-
-			// Cannot throw bait if target position is too close
-			Vector3 toTargetLookGroundVector = targetLookPos - transform.position;
-			toTargetLookGroundVector.y = 0f;
-			if (toTargetLookGroundVector.sqrMagnitude < 2f) {
-				Debug.Log("Cannot throw bait too close to character");
+			// try to get some pooled bait
+			Bait bait = GameManager.current.BaitManager.GetObject();
+			if (bait == null) {
+				// starvation
+				Debug.LogWarning("Cannot do bait skill: bait starvation, please increase the pool size");
 				return;
 			}
 
-			// Raycast check
-			Debug.DrawRay(transform.position, transform.forward * ThrowBaitDistance, Color.red, 1f, false);
-			// Replace 0.5f with half the height of the bait if needed
-			//			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
-			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
-			if (Physics.BoxCast(transform.position, Vector3.one * 0.5f, transform.forward, transform.rotation, ThrowBaitDistance + 0.5f, LayerMask.GetMask("Obstacle"))) {
-				//			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
-				//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
-				//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
-				//			int resultNb = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 10f, overlapResults, transform.rotation);
-				//			Debug.LogFormat("resultNb: {0}", resultNb);
-				//			Debug.LogFormat("LayerMask Obstacle: {0}", LayerMask.GetMask("Obstacle"));
-				//			if (resultNb > 0) {
-				Debug.Log("Raycast detected obstacle, cannot throw bait");
+			// test if nothing at target spawn point, and inside game area
+			if (!AstarPath.active.graphs[0].GetNearest(spawnPoint).node.Walkable) {
+				Debug.LogWarning("Cannot do bait skill: bait target point nearest node is not walkable");
 				return;
 			}
 
-			Vector3 toTargetGroundVector = toTargetLookGroundVector.normalized * ThrowBaitDistance;
-			// Target position is in front of character, but just on ground
-			Vector3 targetPosition = transform.position + toTargetGroundVector;
-			targetPosition.y = 0f;
-
+			// change state and apply action lag
 			currState = PlayerState.ThrowingBait;
-
-			// Freeze character position and rotate character
-			myPathfinder.SetCanMove(false);
-			transform.rotation = Quaternion.LookRotation(toTargetGroundVector);  // immediate rotation
-			myPathfinder.RotateTo(targetLookPos);  // to make sure the character does not rotate toward somewhere else afterward (except if walking)
-
+			// cancel last move order by setting path to null or artifically say the target has been reached or set the new target under the character's feet
+			myPathfinder.path = null;
+//			myPathfinder.SetCanMove(false);
 			noMoveTimer = ThrowBaitLag;
 
-			Bait.Spawn(transform.position + toTargetLookGroundVector.normalized * 0.2f, transform.rotation);
+			// spend mana
+			currMana -= ManaCostBait;
+			myPathfinder.RotateTo(Vector3.right);
 
-			// Tween bait toward target
-			LeanTween.move(Bait.gameObject, targetPosition, ThrowBaitTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
+			bait.Spawn(spawnPoint, transform.rotation, isDetectable: true);
+
+//			// Tween bait toward target
+//			LeanTween.move(Bait.gameObject, targetPosition, ThrowBaitTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
+
+//			// Raycast check
+//			Debug.DrawRay(transform.position, transform.forward * ThrowBaitDistance, Color.red, 1f, false);
+//			// Replace 0.5f with half the height of the bait if needed
+//			//			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
+//			if (Physics.BoxCast(transform.position, Vector3.one * 0.5f, transform.forward, transform.rotation, ThrowBaitDistance + 0.5f, LayerMask.GetMask("Obstacle"))) {
+//				//			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//				//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
+//				//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
+//				//			int resultNb = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 10f, overlapResults, transform.rotation);
+//				//			Debug.LogFormat("resultNb: {0}", resultNb);
+//				//			Debug.LogFormat("LayerMask Obstacle: {0}", LayerMask.GetMask("Obstacle"));
+//				//			if (resultNb > 0) {
+//				Debug.Log("Raycast detected obstacle, cannot throw bait");
+//				return;
+//			}
+
+
+			// Freeze character position and rotate character
+//			transform.rotation = Quaternion.LookRotation(toTargetGroundVector);  // immediate rotation
+
 		}
 
 	}

@@ -34,6 +34,8 @@ public abstract class PoolManager<TPooledObject> : MonoBehaviour where TPooledOb
 			GameObject pooledGameObject = Instantiate(pooledObjectPrefab) as GameObject;
 			pooledGameObject.transform.parent = poolTransform;
 			TPooledObject pooledObject = pooledGameObject.GetComponent<TPooledObject>();
+			// HOTFIX LINE: activate the objects so that their components refs are initialized correctly in Awake(), then release (often means deactivating again)
+			pooledObject.gameObject.SetActive(true);
 			pooledObject.Release();
 			m_Pool.Add(pooledObject);
 		}
@@ -49,6 +51,20 @@ public abstract class PoolManager<TPooledObject> : MonoBehaviour where TPooledOb
 		}
 		// starvation
 		return null;
+	}
+
+	public List<TPooledObject> GetObjectsInUse () {
+		// O(n)
+		List<TPooledObject> objectsInUse = new List<TPooledObject>();
+		for (int i = 0; i < poolSize; ++i) {
+			TPooledObject pooledObject = m_Pool[i];
+			if (pooledObject.IsInUse()) {
+				objectsInUse.Add(pooledObject);
+			}
+		}
+		Debug.LogFormat("{0}'s has {1} objects in use", this, objectsInUse.Count);
+		return objectsInUse;
+
 	}
 
 	public void ReleaseObject (TPooledObject pooledObject) {

@@ -3,13 +3,8 @@ using System.Collections;
 
 public class BaitManager : PoolManager<Bait> {
 
-	// Use this for initialization
-	void Start () {
-	
+	void Awake () {
+		Init();
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }
