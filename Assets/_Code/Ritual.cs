@@ -5,6 +5,8 @@ public class Ritual : MonoBehaviour
 {
     public GameObject ItemAddedParticle;
     public AudioSource FinalItemTossInSound;
+    public GameObject Glyph;
+    public ParticleSystem ExtraBubblesPS;
 
     private int currScore = 0;
     public int CurrentScore
@@ -24,20 +26,24 @@ public class Ritual : MonoBehaviour
     {
         Destroy(item.gameObject);
         CurrentScore++;
-
+        
         if (CurrentScore >= GameManager.current.NeededScore)
         {
             FinalItemTossInSound.Play();
-            GameManager.current.OnWin();
-        }
 
-        ItemAddedParticle.SetActive(true);
-        StartCoroutine(DeactivateParticle());
+            LeanTween.color(Glyph.gameObject, Color.white, 1f);
+
+            ItemAddedParticle.SetActive(true);
+            StartCoroutine(DeactivateParticle());
+        }
+        else
+            ExtraBubblesPS.Play();
     }
 
     IEnumerator DeactivateParticle()
     {
         yield return new WaitForSeconds(3f);
         ItemAddedParticle.SetActive(false);
+        GameManager.current.OnWin();
     }
 }
