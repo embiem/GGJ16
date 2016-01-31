@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public GameObject BurnDownParticle;
     public ParticleSystem HitPS;
     public GameObject EndLifeParticles;
+    public Transform ItemAnchor;
 //	public Transform BaitAnchor;
 	    
     [Space(5f)]
@@ -36,6 +37,8 @@ public class Player : MonoBehaviour
     [Space(5f)]
     public AudioClip SlowDownClip;
     public AudioClip WindBackClip;
+    public AudioClip GeneralCastingClip;
+    public AudioClip DeathSound;
     public AudioSource CastingAS;
 
     [Space(5f)]
@@ -351,6 +354,11 @@ public class Player : MonoBehaviour
         if (CurrentMana >= ManaCostFreeze)
         {
             myAnim.SetTrigger("Cast");
+            if (!CastingAS.isPlaying)
+            {
+                CastingAS.clip = GeneralCastingClip;
+                CastingAS.Play();
+            }
 
             currMana -= ManaCostFreeze;
 
@@ -375,6 +383,11 @@ public class Player : MonoBehaviour
         if (BombCount > 0)
         {
             myAnim.SetTrigger("Cast");
+            if (!CastingAS.isPlaying)
+            {
+                CastingAS.clip = GeneralCastingClip;
+                CastingAS.Play();
+            }
 
             GameObject.Instantiate(TrapPrefab, transform.position, Quaternion.identity);
             BombCount--;
@@ -469,7 +482,9 @@ public class Player : MonoBehaviour
         {
             collectableItem.Take();
             currCollectable = collectableItem;
-            currCollectable.transform.parent = transform;
+            currCollectable.transform.parent = ItemAnchor;
+            currCollectable.transform.position = ItemAnchor.position;
+            currCollectable.transform.rotation = ItemAnchor.rotation;
             myPathfinder.speed = SlowSpeed;  // character slows down when holding item
         }
     }
@@ -506,6 +521,12 @@ public class Player : MonoBehaviour
 
     public void Die()
     {
+        if (!CastingAS.isPlaying)
+        {
+            CastingAS.clip = DeathSound;
+            CastingAS.Play();
+        }
+
         myPathfinder.speed = 0f;
         myAnim.SetTrigger("Die");
         StartCoroutine(DieCoRo());
