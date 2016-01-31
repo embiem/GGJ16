@@ -329,7 +329,7 @@ public class Player : MonoBehaviour
                 Enemy temp = enemy;
                 LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
                 {
-                    zz.transform.position = temp.transform.position;
+                    zz.transform.position = temp.transform.position + Vector3.up;
                     zz.transform.parent = temp.transform;
                 });
                 enemy.OnSlow(8f, zz);
@@ -370,7 +370,7 @@ public class Player : MonoBehaviour
                 Enemy temp = enemy;
                 LeanTween.move(zz, temp.transform.position, 1f).setOnComplete(() =>
                 {
-                    zz.transform.position = temp.transform.position;
+                    zz.transform.position = temp.transform.position + Vector3.up;
                     zz.transform.parent = temp.transform;
                 });
                 enemy.OnFreeze(5f, zz);
