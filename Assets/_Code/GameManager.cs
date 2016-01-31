@@ -69,6 +69,9 @@ public class GameManager : MonoBehaviour
 
             if (UserInterfaceManager.SkillBombBtn.interactable && Player.BombCount <= 0)
                 UserInterfaceManager.SkillBombBtn.interactable = false;
+
+            UserInterfaceManager.ManaHandle.offsetMax = new Vector2(UserInterfaceManager.ManaHandle.offsetMax.x,
+                Mathf.Lerp(-110f, -15f, (float)Player.CurrentMana / (float)Player.MaxMana));
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))

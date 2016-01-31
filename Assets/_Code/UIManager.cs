@@ -37,6 +37,7 @@ public class UIManager : MonoBehaviour
     public Button SkillSlowBtn;
     public Button SkillSleepBtn;
     public Button SkillBombBtn;
+    public RectTransform ManaHandle;
 
     [Header("Windows")]
     public WinLooseWindow_Container WinLooseWindow;
