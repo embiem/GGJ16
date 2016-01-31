@@ -16,7 +16,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public UIManager UserInterfaceManager;
+    public UIManager UIManage;
 	public BaitManager BaitManager;
     public string CurrentScene;
     public int NeededScore;
@@ -28,7 +28,18 @@ public class GameManager : MonoBehaviour
     private bool ingame; public bool IsIngame { get { return ingame; } }
     private Player player; public Player Player { get { return player; } }
 
-    IEnumerator Start()
+    void Start()
+    {
+        UIManage.MainMenuWindow.Open();
+    }
+
+    public void LoadGame()
+    {
+        UIManage.MainMenuWindow.Close();
+        StartCoroutine(LoadGameCR());
+    }
+
+    IEnumerator LoadGameCR()
     {
         AsyncOperation async = SceneManager.LoadSceneAsync(CurrentScene, LoadSceneMode.Additive);
 
@@ -36,16 +47,18 @@ public class GameManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-        UserInterfaceManager.BombsCountTxt.text = player.BombCount.ToString();
+        UIManage.BombsCountTxt.text = player.BombCount.ToString();
 
         ingame = true;
 
-        UserInterfaceManager.GameStartText.gameObject.SetActive(true);
-        iTween.ShakeRotation(UserInterfaceManager.GameStartText.gameObject, Vector3.forward * 15f, 1.5f);
+        UIManage.GameStartText.gameObject.SetActive(true);
+        iTween.ShakeRotation(UIManage.GameStartText.gameObject, Vector3.forward * 15f, 1.5f);
 
         yield return new WaitForSeconds(2.5f);
-        LeanTween.scale(UserInterfaceManager.GameStartText.gameObject, Vector3.zero, 0.5f).setOnComplete(() => {
-            UserInterfaceManager.GameStartText.gameObject.SetActive(false);
+        UIManage.SkillBar.Open();
+        LeanTween.scale(UIManage.GameStartText.gameObject, Vector3.zero, 0.5f).setOnComplete(() =>
+        {
+            UIManage.GameStartText.gameObject.SetActive(false);
         });
     }
 
@@ -54,33 +67,33 @@ public class GameManager : MonoBehaviour
         if (Player != null)
         {
             // Mana & Skills interface handling
-            UserInterfaceManager.TxtMana.text = Player.CurrentMana.ToString();
+            UIManage.TxtMana.text = Player.CurrentMana.ToString();
 
-            if (UserInterfaceManager.SkillSlowBtn.interactable && Player.CurrentMana < Player.ManaCostSlow)
-                UserInterfaceManager.SkillSlowBtn.interactable = false;
+            if (UIManage.SkillSlowBtn.interactable && Player.CurrentMana < Player.ManaCostSlow)
+                UIManage.SkillSlowBtn.interactable = false;
             else
-                if (!UserInterfaceManager.SkillSlowBtn.interactable && Player.CurrentMana >= Player.ManaCostSlow)
-                    UserInterfaceManager.SkillSlowBtn.interactable = true;
+                if (!UIManage.SkillSlowBtn.interactable && Player.CurrentMana >= Player.ManaCostSlow)
+                    UIManage.SkillSlowBtn.interactable = true;
 
-            if (UserInterfaceManager.SkillSleepBtn.interactable && Player.CurrentMana < Player.ManaCostFreeze)
-                UserInterfaceManager.SkillSleepBtn.interactable = false;
+            if (UIManage.SkillSleepBtn.interactable && Player.CurrentMana < Player.ManaCostFreeze)
+                UIManage.SkillSleepBtn.interactable = false;
             else
-                if (!UserInterfaceManager.SkillSleepBtn.interactable && Player.CurrentMana >= Player.ManaCostFreeze)
-                    UserInterfaceManager.SkillSleepBtn.interactable = true;
+                if (!UIManage.SkillSleepBtn.interactable && Player.CurrentMana >= Player.ManaCostFreeze)
+                    UIManage.SkillSleepBtn.interactable = true;
 
-            if (UserInterfaceManager.SkillBaitBtn.interactable && Player.CurrentMana < Player.ManaCostBait)
-                UserInterfaceManager.SkillBaitBtn.interactable = false;
+            if (UIManage.SkillBaitBtn.interactable && Player.CurrentMana < Player.ManaCostBait)
+                UIManage.SkillBaitBtn.interactable = false;
             else
-                if (!UserInterfaceManager.SkillBaitBtn.interactable && Player.CurrentMana >= Player.ManaCostBait)
-                    UserInterfaceManager.SkillBaitBtn.interactable = true;
+                if (!UIManage.SkillBaitBtn.interactable && Player.CurrentMana >= Player.ManaCostBait)
+                    UIManage.SkillBaitBtn.interactable = true;
 
-            if (UserInterfaceManager.SkillBombBtn.interactable && Player.BombCount <= 0)
-                UserInterfaceManager.SkillBombBtn.interactable = false;
+            if (UIManage.SkillBombBtn.interactable && Player.BombCount <= 0)
+                UIManage.SkillBombBtn.interactable = false;
 
-            UserInterfaceManager.ManaHandle.offsetMax = new Vector2(UserInterfaceManager.ManaHandle.offsetMax.x,
+            UIManage.ManaHandle.offsetMax = new Vector2(UIManage.ManaHandle.offsetMax.x,
                 Mathf.Lerp(-110f, -15f, (float)Player.CurrentMana / (float)Player.MaxMana));
 
-            UserInterfaceManager.HealthHandle.offsetMax = new Vector2(UserInterfaceManager.HealthHandle.offsetMax.x,
+            UIManage.HealthHandle.offsetMax = new Vector2(UIManage.HealthHandle.offsetMax.x,
                 Mathf.Lerp(-110f, -15f, (float)Player.CurrentHealth / (float)Player.MaxHealth));
         }
 
@@ -96,6 +109,8 @@ public class GameManager : MonoBehaviour
 
             Player.Die();
 
+            UIManage.SkillBar.Close();
+
             StartCoroutine(ShowEndGame());
         }
     }
@@ -105,8 +120,11 @@ public class GameManager : MonoBehaviour
         if (ingame)
         {
             ingame = false;
-            UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU WON, congrats.";
-            UserInterfaceManager.WinLooseWindow.Open();
+
+            UIManage.SkillBar.Close();
+
+            UIManage.WinLooseWindow.WinLooseText.text = "YOU WON, congrats.";
+            UIManage.WinLooseWindow.Open();
         }
     }
 
@@ -114,13 +132,13 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        UserInterfaceManager.WinLooseWindow.WinLooseText.text = "YOU LOOSE. HAHAHA!";
-        UserInterfaceManager.WinLooseWindow.Open();
+        UIManage.WinLooseWindow.WinLooseText.text = "YOU LOOSE. HAHAHA!";
+        UIManage.WinLooseWindow.Open();
     }
 
     public void OnScoreUpdated(int newScore)
     {
-        UserInterfaceManager.ObjectiveScrollbar.size = (float)newScore / (float)NeededScore;
+        UIManage.ObjectiveScrollbar.size = (float)newScore / (float)NeededScore;
     }
 
     public void Retry()
@@ -130,6 +148,6 @@ public class GameManager : MonoBehaviour
 
     public void OnBombUsed()
     {
-        UserInterfaceManager.BombsCountTxt.text = player.BombCount.ToString();
+        UIManage.BombsCountTxt.text = player.BombCount.ToString();
     }
 }

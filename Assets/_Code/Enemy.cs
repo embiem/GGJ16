@@ -300,18 +300,15 @@ public class Enemy : MonoBehaviour
 
 	public void Die ()
 	{
+        if (currChasedBait != null)
+            currChasedBait.UnregisterChasingCat(this);
+
         ExplosionSound.Play();
         ExplosionSound.transform.parent = null;
 		myPathfinder.speed = 0f;
 		ExplosionPS.gameObject.SetActive(true);
 		ExplosionPS.transform.parent = null;
-		StartCoroutine(DieCoRo());
-	}
-
-	IEnumerator DieCoRo ()
-	{
-		yield return new WaitForSeconds (0.1f);
-		GameObject.Destroy(this.gameObject);
+        GameObject.Destroy(this.gameObject);
 	}
 
 	bool IsWithinSensorRadius (Transform tr)

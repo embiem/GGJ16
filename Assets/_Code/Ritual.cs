@@ -24,6 +24,8 @@ public class Ritual : MonoBehaviour
 
 	public void AddNewItem(CollectableItem item)
     {
+        item.Added();
+
         Destroy(item.gameObject);
         CurrentScore++;
         

@@ -24,6 +24,8 @@ public class Player : MonoBehaviour
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
+    public ParticleSystem HitPS;
+    public GameObject EndLifeParticles;
 //	public Transform BaitAnchor;
 	    
     [Space(5f)]
@@ -431,8 +433,11 @@ public class Player : MonoBehaviour
 
             if (currHealth <= 0)
             {
+                EndLifeParticles.SetActive(true);
                 Die();
             }
+            else
+                HitPS.Play();
         }
     }
 
