@@ -19,6 +19,8 @@ public class Enemy : MonoBehaviour
     public AudioSource ExplosionSound;
     public AudioSource AttackSound;
     public Animator AnimatorController;
+    public GameObject SnailObject;
+    public GameObject KittyObject;
 
 	[Header("Balancing")]
 	public float LooseDistance = 1f;
@@ -180,6 +182,9 @@ public class Enemy : MonoBehaviour
 
                     AnimatorController.SetBool("Sleep", false);
 
+                    SnailObject.SetActive(false);
+                    KittyObject.SetActive(true);
+
 					hasSlowEffect = false;
 					currSlowLength = 0f;
 
@@ -271,6 +276,9 @@ public class Enemy : MonoBehaviour
 
 	public void OnSlow (float forSeconds, GameObject zzParticle)
 	{
+        SnailObject.SetActive(true);
+        KittyObject.SetActive(false);
+
 		currEffectParticle = zzParticle;
 		currSlowLength = forSeconds;
 		slowTimer = 0;
