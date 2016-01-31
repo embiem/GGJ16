@@ -135,17 +135,17 @@ public class Player : MonoBehaviour
     {
         if (GameManager.current.IsIngame)
         {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
+			if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.S))
             {
                 DoSlowSkill();
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha2))
+			if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.D))
             {
                 DoFreezeSkill();
             }
 
-            if (Input.GetKeyDown(KeyCode.Alpha3))
+			if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.F))
             {
                 DoBombSkill();
             }
@@ -195,24 +195,26 @@ public class Player : MonoBehaviour
 	                    Debug.Log("Raycast didn't hit anything!");
 	                }
 	            }
-				else if (Input.GetMouseButtonDown(1) && !HasCollectable) {
-					RaycastHit hit;
-					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-					if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
-					{
-						DoBaitSkill(hit.point);
+				else if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.G)) {
+					if (!HasCollectable) {
+						RaycastHit hit;
+						Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+						if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
+						{
+							DoBaitSkill(hit.point);
+						}
 					}
+		            else
+		            {
+		                GiveUpCollectable();
+		            }
 				}
-	            else if (Input.GetMouseButtonDown(1) && HasCollectable)
-	            {
-	                GiveUpCollectable();
-	            }
 			}
 
 			// DEBUG
-			if (Input.GetKeyDown(KeyCode.R)) {
-				DebugReset();
-			}
+//			if (Input.GetKeyDown(KeyCode.R)) {
+//				DebugReset();
+//			}
         }
 
         float velMagnitude = myPathfinder.Velocity.magnitude;
