@@ -131,7 +131,8 @@ public class Enemy : MonoBehaviour
 					}
 					else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
 						Debug.LogWarning("ODD CASE: chased bait target reached before state changed, please check your triggers");
-						Wander();
+//						Wander();
+						myPathfinder.NewTarget(currChasedBait.transform, myPathCallback, -1, true);
 					}
 					break;
 				}  // end switch
@@ -225,6 +226,7 @@ public class Enemy : MonoBehaviour
         }
 		else if (other.tag == "Bait") {
 			var bait = other.GetComponent<Bait>();
+			Debug.LogFormat("{0} touches {1}", this, bait);
 			Eat(bait);
 			Wander();
 		}
@@ -295,7 +297,7 @@ public class Enemy : MonoBehaviour
 				nearestBait = bait;
 			}
 		}
-		if (nearestBait != null) Debug.LogFormat("{0} found nearest bait: {1}", this, nearestBait);
+//		if (nearestBait != null) Debug.LogFormat("{0} found nearest bait: {1}", this, nearestBait);
 		return nearestBait;
 	}
 

@@ -62,7 +62,7 @@ public abstract class PoolManager<TPooledObject> : MonoBehaviour where TPooledOb
 				objectsInUse.Add(pooledObject);
 			}
 		}
-		Debug.LogFormat("{0}'s has {1} objects in use", this, objectsInUse.Count);
+//		Debug.LogFormat("{0}'s has {1} objects in use", this, objectsInUse.Count);
 		return objectsInUse;
 
 	}
