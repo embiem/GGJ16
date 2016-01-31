@@ -65,6 +65,7 @@ public class UIManager : MonoBehaviour
     [Header("Elements")]
     public Scrollbar ObjectiveScrollbar;
     public Text GameStartText;
+	public Text XMoreToGoText;
     public Text TxtMana;
     public Button SkillSlowBtn;
     public Button SkillSleepBtn;

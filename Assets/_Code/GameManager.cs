@@ -181,4 +181,30 @@ public class GameManager : MonoBehaviour
 		NeededScoreText.text = NeededScore.ToString();
 	}
 
+	public void ShowXMoreToGoMessage (int remainingScore)
+	{
+		string message = "TEST";
+
+		if (remainingScore == 3) {
+			message = "Collect three more!";
+		} else if (remainingScore == 2) {
+			message = "Two remaining!";
+		} else if (remainingScore == 1) {
+			message = "One more to go!";
+		} else {
+			// no message
+			return;
+		}
+
+		UIManage.XMoreToGoText.text = message;
+		UIManage.XMoreToGoText.gameObject.SetActive(true);
+		UIManage.XMoreToGoText.transform.localScale = Vector3.one;
+		iTween.ShakeRotation(UIManage.XMoreToGoText.gameObject, Vector3.forward * 15f, 1.5f);
+
+		LeanTween.scale(UIManage.XMoreToGoText.gameObject, Vector3.zero, 0.5f).setDelay(2.5f).setOnComplete(() =>
+			{
+				UIManage.XMoreToGoText.gameObject.SetActive(false);
+			});
+	}
+
 }
