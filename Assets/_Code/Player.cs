@@ -34,6 +34,11 @@ public class Player : MonoBehaviour
     public AudioSource FootPrintAS;
 
     [Space(5f)]
+    public AudioClip SlowDownClip;
+    public AudioClip WindBackClip;
+    public AudioSource CastingAS;
+
+    [Space(5f)]
     public AudioClip[] ItemTossInClips;
     public AudioClip ItemPickupClip;
     public AudioSource ItemTossInAS;
@@ -302,10 +307,15 @@ public class Player : MonoBehaviour
 
     public void DoSlowSkill()
     {
-        myAnim.SetTrigger("Cast");
-
         if (CurrentMana >= ManaCostSlow)
         {
+            myAnim.SetTrigger("Cast");
+            if (!CastingAS.isPlaying)
+            {
+                CastingAS.clip = SlowDownClip;
+                CastingAS.Play();
+            }
+
             currMana -= ManaCostSlow;
 
             foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
@@ -321,6 +331,18 @@ public class Player : MonoBehaviour
                 });
                 enemy.OnSlow(8f, zz);
             }
+
+            StartCoroutine(WindBackSound());
+        }
+    }
+
+    IEnumerator WindBackSound()
+    {
+        yield return new WaitForSeconds(7.5f);
+        if (!CastingAS.isPlaying)
+        {
+            CastingAS.clip = WindBackClip;
+            CastingAS.Play();
         }
     }
 

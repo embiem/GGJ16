@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     public Renderer KittyRenderer;
     public Texture[] KittyTextures;
     public AudioSource ExplosionSound;
+    public AudioSource AttackSound;
     public Animator AnimatorController;
 
 	[Header("Balancing")]
@@ -108,6 +109,7 @@ public class Enemy : MonoBehaviour
                 myPathfinder.RotateTo(GameManager.current.Player.transform.position);
                 AnimatorController.SetTrigger("Jump");
                 StartCoroutine(AfterJump());
+                AttackSound.Play();
             }
 
 			if (!hasSlowEffect) {
