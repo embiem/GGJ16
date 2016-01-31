@@ -68,11 +68,20 @@ public class GameManager : MonoBehaviour
                 if (!UserInterfaceManager.SkillSleepBtn.interactable && Player.CurrentMana >= Player.ManaCostFreeze)
                     UserInterfaceManager.SkillSleepBtn.interactable = true;
 
+            if (UserInterfaceManager.SkillBaitBtn.interactable && Player.CurrentMana < Player.ManaCostBait)
+                UserInterfaceManager.SkillBaitBtn.interactable = false;
+            else
+                if (!UserInterfaceManager.SkillBaitBtn.interactable && Player.CurrentMana >= Player.ManaCostBait)
+                    UserInterfaceManager.SkillBaitBtn.interactable = true;
+
             if (UserInterfaceManager.SkillBombBtn.interactable && Player.BombCount <= 0)
                 UserInterfaceManager.SkillBombBtn.interactable = false;
 
             UserInterfaceManager.ManaHandle.offsetMax = new Vector2(UserInterfaceManager.ManaHandle.offsetMax.x,
                 Mathf.Lerp(-110f, -15f, (float)Player.CurrentMana / (float)Player.MaxMana));
+
+            UserInterfaceManager.HealthHandle.offsetMax = new Vector2(UserInterfaceManager.HealthHandle.offsetMax.x,
+                Mathf.Lerp(-110f, -15f, (float)Player.CurrentHealth / (float)Player.MaxHealth));
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))

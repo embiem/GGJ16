@@ -17,6 +17,7 @@ public class Enemy : MonoBehaviour
     public Renderer KittyRenderer;
     public Texture[] KittyTextures;
     public AudioSource ExplosionSound;
+    public Animator AnimatorController;
 
 	[Header("Balancing")]
 	public float LooseDistance = 1f;
@@ -55,6 +56,7 @@ public class Enemy : MonoBehaviour
 	private bool hasSlowEffect;
 	private GameObject currEffectParticle;
 	private Bait currChasedBait;
+    private bool attacking;
 
 	IEnumerator Start ()
 	{
@@ -78,6 +80,18 @@ public class Enemy : MonoBehaviour
 			Debug.LogWarning(name + ": Not Reachable Path");
 	}
 
+    IEnumerator AfterJump()
+    {
+        yield return new WaitForSeconds(1.5f);
+
+        if (Vector3.Distance(GameManager.current.Player.transform.position, transform.position) < 2)
+            GameManager.current.Player.OnAttackByCat();
+
+        yield return new WaitForSeconds(0.5f);
+        attacking = false;
+        myPathfinder.SetCanMove(true);
+    }
+
 	void Update ()
 	{
 		if (GameManager.current.IsIngame)
@@ -86,6 +100,15 @@ public class Enemy : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha9))
 				Die();
         #endif
+
+            if (Vector3.Distance(GameManager.current.Player.transform.position, transform.position) < 2 && !attacking)
+            {
+                attacking = true;
+                myPathfinder.SetCanMove(false);
+                myPathfinder.RotateTo(GameManager.current.Player.transform.position);
+                AnimatorController.SetTrigger("Jump");
+                StartCoroutine(AfterJump());
+            }
 
 			if (!hasSlowEffect) {
 
@@ -152,6 +175,9 @@ public class Enemy : MonoBehaviour
                         GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f }, 1f);
                         myPathfinder.speed = NormalSpeed;
                     }
+
+                    AnimatorController.SetBool("Sleep", false);
+
 					hasSlowEffect = false;
 					currSlowLength = 0f;
 
@@ -259,6 +285,8 @@ public class Enemy : MonoBehaviour
 		slowTimer = 0;
 		myPathfinder.speed = 0f;
 		hasSlowEffect = true;
+
+        AnimatorController.SetBool("Sleep", true);
 	}
 
 	/// <summary>

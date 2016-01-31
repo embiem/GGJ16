@@ -41,17 +41,22 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
+    public int BombCount = 3;
     
     [Header("Skills")]
 	public float ThrowBaitDistance = 2f;
 	public float ThrowBaitTime = 0.5f;  // time until bait reaches ground
 	public float ThrowBaitLag = 1f;  // time during which character cannot move
-    public int BombCount = 3;
+    
+    [Header("Mana & Health")]
     public int MaxMana = 100;
     public int ManaPerSecond = 2;
     public int ManaCostSlow = 50;
     public int ManaCostFreeze = 80;
     public int ManaCostBait = 40;
+    [Space(5f)]
+    public int MaxHealth = 100;
+    public int HealthCostPerCat = 25;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
@@ -69,6 +74,8 @@ public class Player : MonoBehaviour
 
     private int currMana; public int CurrentMana { get { return currMana; } }
     private float lastManaIncrease;
+
+    private int currHealth; public int CurrentHealth { get { return currHealth; } }
 
 	private Collider[] overlapResults;
 
@@ -102,6 +109,7 @@ public class Player : MonoBehaviour
         FootPrintAS.clip = SlowWalkClip;
 
         currMana = MaxMana;
+        currHealth = MaxHealth;
     }
 
 	public void DebugReset () {
@@ -292,6 +300,8 @@ public class Player : MonoBehaviour
 
     public void DoSlowSkill()
     {
+        myAnim.SetTrigger("Cast");
+
         if (CurrentMana >= ManaCostSlow)
         {
             currMana -= ManaCostSlow;
@@ -307,7 +317,7 @@ public class Player : MonoBehaviour
                     zz.transform.position = temp.transform.position;
                     zz.transform.parent = temp.transform;
                 });
-                enemy.OnSlow(6f, zz);
+                enemy.OnSlow(8f, zz);
             }
         }
     }
@@ -316,6 +326,8 @@ public class Player : MonoBehaviour
     {
         if (CurrentMana >= ManaCostFreeze)
         {
+            myAnim.SetTrigger("Cast");
+
             currMana -= ManaCostFreeze;
 
             foreach (Enemy enemy in GameObject.FindObjectsOfType<Enemy>())
@@ -329,7 +341,7 @@ public class Player : MonoBehaviour
                     zz.transform.position = temp.transform.position;
                     zz.transform.parent = temp.transform;
                 });
-                enemy.OnFreeze(4f, zz);
+                enemy.OnFreeze(5f, zz);
             }
         }
     }
@@ -338,6 +350,8 @@ public class Player : MonoBehaviour
     {
         if (BombCount > 0)
         {
+            myAnim.SetTrigger("Cast");
+
             GameObject.Instantiate(TrapPrefab, transform.position, Quaternion.identity);
             BombCount--;
             GameManager.current.OnBombUsed();
@@ -348,6 +362,8 @@ public class Player : MonoBehaviour
 	public void DoBaitSkill(Vector3 spawnPoint) {
 		if (CurrentMana >= ManaCostBait)
 		{
+            myAnim.SetTrigger("Cast");
+
 			// try to get some pooled bait
 			Bait bait = GameManager.current.BaitManager.GetObject();
 			if (bait == null) {
@@ -407,6 +423,19 @@ public class Player : MonoBehaviour
 
     #region Actions
 
+    public void OnAttackByCat()
+    {
+        if (currHealth > 0) // only possible if we're still alive
+        {
+            currHealth -= HealthCostPerCat;
+
+            if (currHealth <= 0)
+            {
+                Die();
+            }
+        }
+    }
+
     private void PickUpCollectable(CollectableItem collectableItem)
     {
         if (Time.time - lastTimeTossed > 2f)
@@ -447,21 +476,33 @@ public class Player : MonoBehaviour
             lastTimeTossed = Time.time;
         }
     }
-		
+
     public void Die()
     {
         myPathfinder.speed = 0f;
-        BurnDownParticle.gameObject.SetActive(true);
-        BurnDownParticle.transform.position = transform.position;
-        BurnDownParticle.transform.parent = null;
+        myAnim.SetTrigger("Die");
         StartCoroutine(DieCoRo());
+
+        /*
+        ExplosionSound.Play();
+        ExplosionSound.transform.parent = null;
+		
+		ExplosionPS.gameObject.SetActive(true);
+		ExplosionPS.transform.parent = null;
+		StartCoroutine(DieCoRo());
+        */
     }
 
     IEnumerator DieCoRo()
-    {
-        yield return new WaitForSeconds(0.2f);
-        GameObject.Destroy(this.gameObject);
-    }
+	{
+        /*
+		yield return new WaitForSeconds (0.1f);
+		GameObject.Destroy(this.gameObject);
+         * */
+
+        yield return new WaitForSeconds(2f);
+        GameManager.current.OnLoose();
+	}
 
     #endregion
 }

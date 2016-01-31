@@ -37,7 +37,9 @@ public class UIManager : MonoBehaviour
     public Button SkillSlowBtn;
     public Button SkillSleepBtn;
     public Button SkillBombBtn;
+    public Button SkillBaitBtn;
     public RectTransform ManaHandle;
+    public RectTransform HealthHandle;
     public Text BombsCountTxt;
 
     [Header("Windows")]
