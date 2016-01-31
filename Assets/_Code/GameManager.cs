@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
 
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
 	public BaitManager BaitManager;
     public string CurrentScene;
     public int NeededScore;
+	public Text NeededScoreText;
 
     [Header("Sounds")]
     public UnityEngine.Audio.AudioMixer SoundMixer;
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         UIManage.MainMenuWindow.Open();
+
+		UpdateUIValueText();
     }
 
     public void LoadGame()
@@ -157,4 +161,24 @@ public class GameManager : MonoBehaviour
     {
         UIManage.BombsCountTxt.text = player.BombCount.ToString();
     }
+
+	public void IncrementNeededScore () {
+		if (NeededScore < 12)
+			SetNeededScore(NeededScore + 1);
+	}
+
+	public void DecrementNeededScore () {
+		if (NeededScore > 2)
+			SetNeededScore(NeededScore - 1);
+	}
+
+	void SetNeededScore (int score) {
+		NeededScore = score;
+		UpdateUIValueText();
+	}
+
+	void UpdateUIValueText () {
+		NeededScoreText.text = NeededScore.ToString();
+	}
+
 }
