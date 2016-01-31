@@ -32,6 +32,10 @@ public class MainMenuWindow_Container : UIWindow
     public Image Logo;
     public Image FlickerOverlay;
 
+    public GameObject MainParent;
+    public GameObject InstructionsParent;
+    public GameObject CreditsParent;
+
     public override void Open()
     {
         Logo.transform.localScale = Vector3.zero;
@@ -80,6 +84,10 @@ public class UIManager : MonoBehaviour
     public MainMenuWindow_Container MainMenuWindow;
     public SkillBar_Container SkillBar;
 
+    [Header("Sounds")]
+    public AudioClip[] ClickSounds;
+    public AudioSource ClickAS;
+
     public void OnSkillClicked(int id)
     {
         if (id == 1)
@@ -102,5 +110,23 @@ public class UIManager : MonoBehaviour
         {
             GameManager.current.Player.GiveUpCollectable();
         }
+    }
+
+    public void OnInstructionsClicked()
+    {
+        GameManager.current.PlayClickSound();
+        MainMenuWindow.InstructionsParent.SetActive(true);
+    }
+    public void OnCreditsClicked()
+    {
+        GameManager.current.PlayClickSound();
+        MainMenuWindow.CreditsParent.SetActive(true);
+    }
+
+    public void OnMenuBackClicked()
+    {
+        GameManager.current.PlayClickSound();
+        MainMenuWindow.InstructionsParent.SetActive(false);
+        MainMenuWindow.CreditsParent.SetActive(false);
     }
 }

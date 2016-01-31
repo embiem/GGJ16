@@ -185,6 +185,15 @@ public class GameManager : MonoBehaviour
 		NeededScoreText.text = NeededScore.ToString();
 	}
 
+    public void PlayClickSound()
+    {
+        if (UIManage.ClickAS.isPlaying)
+            UIManage.ClickAS.Stop();
+
+        UIManage.ClickAS.clip = UIManage.ClickSounds[Random.Range(0, UIManage.ClickSounds.Length)];
+        UIManage.ClickAS.Play();
+    }
+
 	public void ShowXMoreToGoMessage (int remainingScore)
 	{
 		string message = "TEST";
@@ -210,5 +219,4 @@ public class GameManager : MonoBehaviour
 				UIManage.XMoreToGoText.gameObject.SetActive(false);
 			});
 	}
-
 }
