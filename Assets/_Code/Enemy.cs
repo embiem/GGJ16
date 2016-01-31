@@ -279,6 +279,12 @@ public class Enemy : MonoBehaviour
         SnailObject.SetActive(true);
         KittyObject.SetActive(false);
 
+        if (currEffectParticle != null)
+        {
+            GameObject.Destroy(currEffectParticle.gameObject);
+            currEffectParticle = null;
+        }
+
 		currEffectParticle = zzParticle;
 		currSlowLength = forSeconds;
 		slowTimer = 0;
@@ -289,6 +295,12 @@ public class Enemy : MonoBehaviour
 	public void OnFreeze (float forSeconds, GameObject zzParticle)
 	{
         GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 0f, 1f }, 1f);
+
+        if (currEffectParticle != null)
+        {
+            GameObject.Destroy(currEffectParticle.gameObject);
+            currEffectParticle = null;
+        }
 
 		currEffectParticle = zzParticle;
 		currSlowLength = forSeconds;
