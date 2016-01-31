@@ -54,6 +54,8 @@ public class Player : MonoBehaviour
     public int BombCount = 3;
 	public float SlowTime = 8f;
 	public float FreezeTime = 5f;
+	public float BaitEatTime = 2f;
+	public float BaitStayTime = 10f;
     
     [Header("Skills")]
 	public float ThrowBaitDistance = 2f;

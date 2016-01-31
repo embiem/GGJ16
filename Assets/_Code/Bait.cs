@@ -7,9 +7,6 @@ public class Bait : MonoBehaviour, IPooledObject {
 //	new Rigidbody rigidbody;
 	new	BoxCollider collider;
 
-	public float EatTime = 2f;
-	public float StayTime = 10f;
-
 	private bool detectable;
 	public bool Detectable { get { return detectable; } }
 
@@ -81,7 +78,7 @@ public class Bait : MonoBehaviour, IPooledObject {
 		gameObject.SetActive(true);
 		SetDetectable(isDetectable);
 
-		stayRemainingTime = StayTime;
+		stayRemainingTime = GameManager.current.Player.BaitStayTime;
 	}
 
 	public void Despawn () {
@@ -139,7 +136,7 @@ public class Bait : MonoBehaviour, IPooledObject {
 		// if already eaten by a cat, do NOT reset timer!
 		if (!isEaten) {
 			isEaten = true;
-			eatRemainingTime = EatTime;
+			eatRemainingTime = GameManager.current.Player.BaitEatTime;
 		}
 	}
 
