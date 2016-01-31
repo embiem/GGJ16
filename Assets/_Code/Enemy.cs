@@ -46,10 +46,10 @@ public class Enemy : MonoBehaviour
             {
                 currState = value;
                 if (currState == EnemyState.ChasingPlayer)
-                    GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f , 0f }, 1f);
+                    GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f , 0f, 0f }, 1f);
                 else
                     if (currState == EnemyState.MovingAround)
-                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f }, 1f);
+                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 1f);
             }
         }
     }
@@ -171,12 +171,12 @@ public class Enemy : MonoBehaviour
 				if (slowTimer > currSlowLength) {
                     if (CurrrentState == EnemyState.ChasingPlayer)
                     {
-                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f, 0f }, 1f);
+                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f, 0f, 0f }, 1f);
                         myPathfinder.speed = FollowSpeed;
                     }
                     else
                     {
-                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f }, 1f);
+                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 1f);
                         myPathfinder.speed = NormalSpeed;
                     }
 
@@ -294,7 +294,7 @@ public class Enemy : MonoBehaviour
 
 	public void OnFreeze (float forSeconds, GameObject zzParticle)
 	{
-        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 0f, 1f }, 1f);
+        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 0f, 1f, 0f }, 1f);
 
         if (currEffectParticle != null)
         {

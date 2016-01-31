@@ -24,6 +24,7 @@ public class GameManager : MonoBehaviour
 	public Text NeededScoreText;
 
     [Header("Sounds")]
+    public AudioSource MusicIngame;
     public UnityEngine.Audio.AudioMixer SoundMixer;
     public UnityEngine.Audio.AudioMixerSnapshot[] SoundSnapshots;
 
@@ -57,6 +58,9 @@ public class GameManager : MonoBehaviour
 
         UIManage.GameStartText.gameObject.SetActive(true);
         iTween.ShakeRotation(UIManage.GameStartText.gameObject, Vector3.forward * 15f, 1.5f);
+
+        MusicIngame.Play();
+        SoundMixer.TransitionToSnapshots(SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 2.5f);
 
         yield return new WaitForSeconds(2.5f);
         UIManage.SkillBar.Open();
@@ -143,7 +147,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        UIManage.WinLooseWindow.WinLooseText.text = "YOU LOOSE. HAHAHA!";
+        UIManage.WinLooseWindow.WinLooseText.text = "YOU LOSE. HAHAHA!";
         UIManage.WinLooseWindow.Open();
     }
 
