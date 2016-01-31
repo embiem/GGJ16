@@ -3,36 +3,22 @@
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\_Code\Player.cs">
     <Files>
       <File FileName="Assets\AstarPathfindingProject\Core\Serialization\JsonConverters.cs" Line="35" Column="4" />
-      <File FileName="Assets\_Code\GameManager.cs" Line="24" Column="46" />
-      <File FileName="Assets\_Code\Player.cs" Line="280" Column="8" />
-      <File FileName="Assets\_Code\Bait.cs" Line="31" Column="4" />
-      <File FileName="Assets\_Code\Enemy.cs" Line="82" Column="7" />
-      <File FileName="Assets\_Code\CamMovement.cs" Line="19" Column="6" />
+      <File FileName="Assets\_Code\GameManager.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Code\UIManager.cs" Line="60" Column="36" />
+      <File FileName="Assets\_Code\Player.cs" Line="365" Column="4" />
+      <File FileName="Assets\_Code\Bait.cs" Line="40" Column="11" />
+      <File FileName="Assets\_Code\Enemy.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Code\CamMovement.cs" Line="1" Column="1" />
       <File FileName="Assets\_Code\Ritual.cs" Line="1" Column="1" />
-      <File FileName="Assets\_Code\UIManager.cs" Line="1" Column="1" />
       <File FileName="Assets\LeanTween\Examples\Scripts\GeneralBasics2dCS.cs" Line="1" Column="1" />
       <File FileName="Assets\LeanTween\Editor\LeanTweenDocumentationEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets\LeanTween\Examples\Scripts\TestingEverything.cs" Line="115" Column="60" />
-      <File FileName="Assets\LeanTween\Examples\Scripts\TestingAllCS.cs" Line="151" Column="116" />
+      <File FileName="Assets\LeanTween\Examples\Scripts\TestingEverything.cs" Line="1" Column="1" />
+      <File FileName="Assets\_Code\PathfinderAgent.cs" Line="7" Column="27" />
+      <File FileName="Assets\_Code\BaitManager.cs" Line="4" Column="34" />
+      <File FileName="Assets\_Code\Pattern\IPooledObject.cs" Line="9" Column="17" />
+      <File FileName="Assets\_Code\Pattern\PoolManager.cs" Line="45" Column="43" />
+      <File FileName="Assets\_Code\Pattern\SingletonManager.cs" Line="22" Column="18" />
     </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State name="__root__">
-          <Node name="GGJ 2016 - Cat tower defense" expanded="True">
-            <Node name="Assembly-CSharp" expanded="True">
-              <Node name="_Code" expanded="True">
-                <Node name="Player.cs" selected="True" />
-              </Node>
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-      <Pad Id="MonoDevelop.NUnit.TestPad">
-        <State name="__root__">
-          <Node name="GGJ 2016 - Cat tower defense" expanded="True" selected="True" />
-        </State>
-      </Pad>
-    </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />

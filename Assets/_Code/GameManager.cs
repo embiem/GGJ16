@@ -17,6 +17,7 @@ public class GameManager : MonoBehaviour
     }
 
     public UIManager UserInterfaceManager;
+	public BaitManager BaitManager;
     public string CurrentScene;
     public int NeededScore;
 
@@ -26,7 +27,6 @@ public class GameManager : MonoBehaviour
 
     private bool ingame; public bool IsIngame { get { return ingame; } }
     private Player player; public Player Player { get { return player; } }
-	public Bait Bait { get { return player.Bait; } }
 
     IEnumerator Start()
     {

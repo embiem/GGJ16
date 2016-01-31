@@ -59,7 +59,7 @@ public class UIManager : MonoBehaviour
     {
         if (!GameManager.current.Player.HasCollectable)
         {
-            GameManager.current.Player.ThrowBait();
+			GameManager.current.Player.DoBaitSkill(Vector3.zero);
         }
         else
         {

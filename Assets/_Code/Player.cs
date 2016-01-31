@@ -3,6 +3,13 @@ using System.Collections;
 
 public class Player : MonoBehaviour
 {
+
+	public enum PlayerState
+	{
+		Walking,
+		ThrowingBait
+	}
+
     #region Fields
 
     public LayerMask HitDetection;
@@ -17,9 +24,8 @@ public class Player : MonoBehaviour
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
-	public Bait Bait;
-	public Transform BaitAnchor;
-    
+//	public Transform BaitAnchor;
+	    
     [Space(5f)]
     public AudioClip SlowWalkClip;
     public AudioClip FastWalkClip;
@@ -35,23 +41,27 @@ public class Player : MonoBehaviour
     public float NormalSpeed = 8f;
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
-	public float baitThrowDistance = 2f;
-
+    
     [Header("Skills")]
-	public float BaitThrowDistance = 2f;
-	public float BaitThrowTime = 1f;
+	public float ThrowBaitDistance = 2f;
+	public float ThrowBaitTime = 0.5f;  // time until bait reaches ground
+	public float ThrowBaitLag = 1f;  // time during which character cannot move
     public int BombCount = 3;
     public int MaxMana = 100;
     public int ManaPerSecond = 2;
     public int ManaCostSlow = 50;
     public int ManaCostFreeze = 80;
+    public int ManaCostBait = 40;
 
     private PathfinderAgent myPathfinder;
     private PathCallback myPathCallback;
 
     private Transform target;
+
+	private PlayerState currState;
     private CollectableItem currCollectable;
     private float lastTimeTossed;
+	private float noMoveTimer;
 
     private float fastTimer;
     private bool hasFastEffect;
@@ -80,6 +90,8 @@ public class Player : MonoBehaviour
 
         target = new GameObject("Player-Target").transform;
 
+		currState = PlayerState.Walking;
+
         lastTimeTossed = Time.time;
 
         SelectionRing = GameObject.Instantiate(SelectionRing);
@@ -89,13 +101,12 @@ public class Player : MonoBehaviour
 
         FootPrintAS.clip = SlowWalkClip;
 
-		Bait.gameObject.SetActive(false);
-
         currMana = MaxMana;
     }
 
 	public void DebugReset () {
-		Bait.Despawn();
+		currMana = MaxMana;
+		lastManaIncrease = -100f;
 	}
 
     void Update()
@@ -141,33 +152,40 @@ public class Player : MonoBehaviour
                 }
             }
 
-            if (Input.GetMouseButtonDown(0) && !UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-            {
-                RaycastHit hit;
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
-                {
-                    target.position = hit.point;
-                    myPathfinder.NewTarget(target, myPathCallback);
+			if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject()) {
+	            if (Input.GetMouseButtonDown(0))
+	            {
+	                RaycastHit hit;
+	                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	                if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
+	                {
+	                    target.position = hit.point;
+	                    myPathfinder.NewTarget(target, myPathCallback);
 
-                    SelectionRing.transform.position = hit.point;
-                    SelectionRing.transform.localScale = Vector3.zero;
+	                    SelectionRing.transform.position = hit.point;
+	                    SelectionRing.transform.localScale = Vector3.zero;
 
-                    LeanTween.cancel(SelectionRing);
-                    LeanTween.scale(SelectionRing, Vector3.one, 0.5f).setOnComplete(ResetSelectionRing);
-                }
-                else
-                {
-                    Debug.Log("Raycast didn't hit anything!");
-                }
-            }
-			else if (Input.GetMouseButtonDown(1) && !HasCollectable) {
-				ThrowBait();
+	                    LeanTween.cancel(SelectionRing);
+	                    LeanTween.scale(SelectionRing, Vector3.one, 0.5f).setOnComplete(ResetSelectionRing);
+	                }
+	                else
+	                {
+	                    Debug.Log("Raycast didn't hit anything!");
+	                }
+	            }
+				else if (Input.GetMouseButtonDown(1) && !HasCollectable) {
+					RaycastHit hit;
+					Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+					if (Physics.Raycast(ray, out hit, float.MaxValue, HitDetection))
+					{
+						DoBaitSkill(hit.point);
+					}
+				}
+	            else if (Input.GetMouseButtonDown(1) && HasCollectable)
+	            {
+	                GiveUpCollectable();
+	            }
 			}
-            else if (Input.GetMouseButtonDown(1) && HasCollectable)
-            {
-                GiveUpCollectable();
-            }
 
 			// DEBUG
 			if (Input.GetKeyDown(KeyCode.R)) {
@@ -199,6 +217,23 @@ public class Player : MonoBehaviour
 
         PS.emissionRate = velMagnitude * 15; // show particles based on current speed
     }
+
+	void FixedUpdate () {
+		switch (currState) {
+		case PlayerState.Walking:
+			break;
+		case PlayerState.ThrowingBait:
+			noMoveTimer -= Time.deltaTime;
+			if (noMoveTimer < 0) {
+				noMoveTimer = 0f;
+				currState = PlayerState.Walking;
+				myPathfinder.SetCanMove(true);
+			}
+			break;
+		default:
+			break;
+		}
+	}
 
     void ResetSelectionRing()
     {
@@ -309,6 +344,65 @@ public class Player : MonoBehaviour
         }
     }
 
+	/// Throw some bait toward to lure the cats (reuse same object), toward target look position (zero vector for forward)
+	public void DoBaitSkill(Vector3 spawnPoint) {
+		if (CurrentMana >= ManaCostBait)
+		{
+			// try to get some pooled bait
+			Bait bait = GameManager.current.BaitManager.GetObject();
+			if (bait == null) {
+				// starvation
+				Debug.LogWarning("Cannot do bait skill: bait starvation, please increase the pool size");
+				return;
+			}
+
+			// test if nothing at target spawn point, and inside game area
+			if (!AstarPath.active.graphs[0].GetNearest(spawnPoint).node.Walkable) {
+				Debug.LogWarning("Cannot do bait skill: bait target point nearest node is not walkable");
+				return;
+			}
+
+			// change state and apply action lag
+			currState = PlayerState.ThrowingBait;
+			// cancel last move order by setting path to null or artifically say the target has been reached or set the new target under the character's feet
+			myPathfinder.path = null;
+//			myPathfinder.SetCanMove(false);
+			noMoveTimer = ThrowBaitLag;
+
+			// spend mana
+			currMana -= ManaCostBait;
+			myPathfinder.RotateTo(Vector3.right);
+
+			bait.Spawn(spawnPoint, transform.rotation, isDetectable: true);
+
+//			// Tween bait toward target
+//			LeanTween.move(Bait.gameObject, targetPosition, ThrowBaitTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
+
+//			// Raycast check
+//			Debug.DrawRay(transform.position, transform.forward * ThrowBaitDistance, Color.red, 1f, false);
+//			// Replace 0.5f with half the height of the bait if needed
+//			//			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
+//			if (Physics.BoxCast(transform.position, Vector3.one * 0.5f, transform.forward, transform.rotation, ThrowBaitDistance + 0.5f, LayerMask.GetMask("Obstacle"))) {
+//				//			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
+//				//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
+//				//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
+//				//			int resultNb = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 10f, overlapResults, transform.rotation);
+//				//			Debug.LogFormat("resultNb: {0}", resultNb);
+//				//			Debug.LogFormat("LayerMask Obstacle: {0}", LayerMask.GetMask("Obstacle"));
+//				//			if (resultNb > 0) {
+//				Debug.Log("Raycast detected obstacle, cannot throw bait");
+//				return;
+//			}
+
+
+			// Freeze character position and rotate character
+//			transform.rotation = Quaternion.LookRotation(toTargetGroundVector);  // immediate rotation
+
+		}
+
+	}
+
     #endregion
 
     #region Actions
@@ -353,40 +447,7 @@ public class Player : MonoBehaviour
             lastTimeTossed = Time.time;
         }
     }
-
-	/// Throw some bait toward to lure the cats (reuse same object)
-	public void ThrowBait() {
-		// Cannot send more than 1 bait at once
-		if (!Bait.gameObject.activeSelf) {
-			// Raycast check
-			Debug.DrawRay(BaitAnchor.position, transform.forward * BaitThrowDistance, Color.red, 1f, false);
-			// Replace 0.5f with half the height of the bait if needed
-//			if (Physics.BoxCast(BaitAnchor.position + Vector3.up * 0.5f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
-			// some margin before raycasting or boxcasting because casting from inside does not detect collisions
-			if (Physics.BoxCast(BaitAnchor.position - transform.forward * 1f, Vector3.one * 0.5f, transform.forward, transform.rotation, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
-//			if (Physics.Raycast(BaitAnchor.position, transform.forward, BaitThrowDistance, LayerMask.GetMask("Obstacle"))) {
-//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation, LayerMask.GetMask("Obstacle"));
-//			int resultNb = Physics.OverlapBoxNonAlloc(BaitAnchor.position + transform.forward * BaitThrowDistance * 0.5f, new Vector3(1f, 1f, 0.5f + BaitThrowDistance * 0.5f), overlapResults, transform.rotation);
-//			int resultNb = Physics.OverlapBoxNonAlloc(transform.position, Vector3.one * 10f, overlapResults, transform.rotation);
-//			Debug.LogFormat("resultNb: {0}", resultNb);
-//			Debug.LogFormat("LayerMask Obstacle: {0}", LayerMask.GetMask("Obstacle"));
-//			if (resultNb > 0) {
-				Debug.Log("Raycast detected obstacle, cannot throw bait");
-				return;
-			}
-
-			// Target position is in front of character, but just on ground
-			Vector3 targetPosition = BaitAnchor.position + transform.forward * BaitThrowDistance;
-			targetPosition.y = 0f;
-
-			Bait.Spawn(BaitAnchor.position, transform.rotation);
-
-			// Tween bait toward target
-			LeanTween.move(Bait.gameObject, targetPosition, BaitThrowTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
-		}
-
-	}
-
+		
     public void Die()
     {
         myPathfinder.speed = 0f;
