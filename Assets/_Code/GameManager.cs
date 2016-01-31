@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
 
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        UserInterfaceManager.BombsCountTxt.text = player.BombCount.ToString();
 
         ingame = true;
 
@@ -116,5 +117,10 @@ public class GameManager : MonoBehaviour
     public void Retry()
     {
         SceneManager.LoadScene(0);
+    }
+
+    public void OnBombUsed()
+    {
+        UserInterfaceManager.BombsCountTxt.text = player.BombCount.ToString();
     }
 }

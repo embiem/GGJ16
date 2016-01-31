@@ -305,6 +305,7 @@ public class Player : MonoBehaviour
         {
             GameObject.Instantiate(TrapPrefab, transform.position, Quaternion.identity);
             BombCount--;
+            GameManager.current.OnBombUsed();
         }
     }
 

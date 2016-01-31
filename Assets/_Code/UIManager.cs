@@ -38,6 +38,7 @@ public class UIManager : MonoBehaviour
     public Button SkillSleepBtn;
     public Button SkillBombBtn;
     public RectTransform ManaHandle;
+    public Text BombsCountTxt;
 
     [Header("Windows")]
     public WinLooseWindow_Container WinLooseWindow;
