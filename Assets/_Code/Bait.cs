@@ -74,7 +74,8 @@ public class Bait : MonoBehaviour, IPooledObject {
 	/// </summary>
 	public void NotifyDisappear () {
 		foreach (Enemy cat in chasingCats) {
-			cat.OnBaitDisappeared();
+            if (cat != null)
+			    cat.OnBaitDisappeared();
 		}
 	}
 

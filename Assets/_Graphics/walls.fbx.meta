@@ -8,15 +8,30 @@ ModelImporter:
     100000: pillar
     100002: wall
     100004: //RootNode
+    100006: edge
+    100008: pillarTip
+    100010: wallSimple
     400000: pillar
     400002: wall
     400004: //RootNode
+    400006: edge
+    400008: pillarTip
+    400010: wallSimple
     2300000: pillar
     2300002: wall
+    2300004: edge
+    2300006: pillarTip
+    2300008: wallSimple
     3300000: pillar
     3300002: wall
+    3300004: edge
+    3300006: pillarTip
+    3300008: wallSimple
     4300000: wall
     4300002: pillar
+    4300004: wallSimple
+    4300006: edge
+    4300008: pillarTip
     9500000: //RootNode
   materials:
     importMaterials: 1
