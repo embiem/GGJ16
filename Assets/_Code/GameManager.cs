@@ -99,6 +99,13 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
             Application.Quit();
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            string path = Application.persistentDataPath + "/" + string.Format("screenshot-{0:yyyy-MM-dd_hh-mm-ss-tt}.png", System.DateTime.Now);
+            Application.CaptureScreenshot(path);
+            Debug.Log("Screenshot Saved to: " + path);
+        }
     }
 
     public void OnLoose()
