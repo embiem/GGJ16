@@ -149,7 +149,7 @@ public class Player : MonoBehaviour
             if (Time.time - lastManaIncrease >= 1f)
             {
                 currMana = Mathf.Clamp(currMana + ManaPerSecond, 0, MaxMana);
-                lastManaIncrease = Time.time + (Time.time - lastManaIncrease - 1f); // take difference into account
+                lastManaIncrease = lastManaIncrease + 1f; // take difference into account
             }
 
             if (hasFastEffect)
@@ -409,6 +409,8 @@ public class Player : MonoBehaviour
 				return;
 			}
 
+			spawnPoint.y = 0f;
+
 			// test if nothing at target spawn point, and inside game area
 			if (!AstarPath.active.graphs[0].GetNearest(spawnPoint).node.Walkable) {
 				Debug.LogWarning("Cannot do bait skill: bait target point nearest node is not walkable");
@@ -424,7 +426,7 @@ public class Player : MonoBehaviour
 
 			// spend mana
 			currMana -= ManaCostBait;
-			myPathfinder.RotateTo(Vector3.right);
+			myPathfinder.RotateTo(spawnPoint);
 
 			bait.Spawn(spawnPoint, transform.rotation, isDetectable: true);
 

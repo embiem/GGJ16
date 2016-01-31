@@ -8,6 +8,7 @@ public class Bait : MonoBehaviour, IPooledObject {
 	new	BoxCollider collider;
 
 	public float EatTime = 2f;
+	public float StayTime = 10f;
 
 	private bool detectable;
 	public bool Detectable { get { return detectable; } }
@@ -17,6 +18,7 @@ public class Bait : MonoBehaviour, IPooledObject {
 
 	bool isEaten; // is it currently being eaten?
 	float eatRemainingTime;
+	float stayRemainingTime;
 
 	// Use this for initialization
 	void Awake () {
@@ -32,6 +34,13 @@ public class Bait : MonoBehaviour, IPooledObject {
 		if (isEaten) {
 			eatRemainingTime -= Time.deltaTime;
 			if (eatRemainingTime <= 0) {
+				Despawn();
+			}
+		} else {
+			// only if not eaten, bait may get rotten and disappear
+			stayRemainingTime -= Time.deltaTime;
+			if (stayRemainingTime <= 0) {
+				// better would be an alpha or blinking disappear animation but okay
 				Despawn();
 			}
 		}
@@ -71,11 +80,14 @@ public class Bait : MonoBehaviour, IPooledObject {
 		eatRemainingTime = 0f;
 		gameObject.SetActive(true);
 		SetDetectable(isDetectable);
+
+		stayRemainingTime = StayTime;
 	}
 
 	public void Despawn () {
 		isEaten = false;
 		eatRemainingTime = 0f;
+		stayRemainingTime = 0f;
 		SetDetectable(false);
 		gameObject.SetActive(false);
 	}

@@ -138,7 +138,7 @@ public class GameManager : MonoBehaviour
 
             UIManage.SkillBar.Close();
 
-            UIManage.WinLooseWindow.WinLooseText.text = "YOU WON, congrats.";
+            UIManage.WinLooseWindow.WinLooseText.text = "Ritual successful! Congratulations!";
             UIManage.WinLooseWindow.Open();
         }
     }
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
-        UIManage.WinLooseWindow.WinLooseText.text = "YOU LOSE. HAHAHA!";
+        UIManage.WinLooseWindow.WinLooseText.text = "Ritual failed! Try again!";
         UIManage.WinLooseWindow.Open();
     }
 
