@@ -104,7 +104,7 @@ public class UIManager : MonoBehaviour
     {
         if (!GameManager.current.Player.HasCollectable)
         {
-			GameManager.current.Player.DoBaitSkill(Vector3.zero);
+			GameManager.current.Player.DoBaitSkill(GameManager.current.Player.transform.position + GameManager.current.Player.transform.forward * 0.7f);
         }
         else
         {
