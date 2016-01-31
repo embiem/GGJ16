@@ -52,10 +52,12 @@ public class Player : MonoBehaviour
 //    public float FastSpeed = 12f;
     public float SpeedupLength = 4f;
     public int BombCount = 3;
+	public float SlowTime = 8f;
+	public float FreezeTime = 5f;
     
     [Header("Skills")]
 	public float ThrowBaitDistance = 2f;
-	public float ThrowBaitTime = 0.5f;  // time until bait reaches ground
+//	public float ThrowBaitTime = 0.5f;  // time until bait reaches ground
 	public float ThrowBaitLag = 1f;  // time during which character cannot move
     
     [Header("Mana & Health")]
@@ -332,7 +334,7 @@ public class Player : MonoBehaviour
                     zz.transform.position = temp.transform.position + Vector3.up;
                     zz.transform.parent = temp.transform;
                 });
-                enemy.OnSlow(8f, zz);
+                enemy.OnSlow(SlowTime, zz);
             }
 
             StartCoroutine(WindBackSound());
@@ -373,7 +375,7 @@ public class Player : MonoBehaviour
                     zz.transform.position = temp.transform.position + Vector3.up;
                     zz.transform.parent = temp.transform;
                 });
-                enemy.OnFreeze(5f, zz);
+                enemy.OnFreeze(FreezeTime, zz);
             }
         }
     }
