@@ -122,8 +122,6 @@ public class GameManager : MonoBehaviour
         {
             ingame = false;
 
-            Player.Die();
-
             UIManage.SkillBar.Close();
 
             StartCoroutine(ShowEndGame());
@@ -219,4 +217,9 @@ public class GameManager : MonoBehaviour
 				UIManage.XMoreToGoText.gameObject.SetActive(false);
 			});
 	}
+
+    public void Quit()
+    {
+        Application.Quit();
+    }
 }
