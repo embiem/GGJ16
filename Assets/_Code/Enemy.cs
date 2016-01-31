@@ -246,7 +246,9 @@ public class Enemy : MonoBehaviour
 		// despawn will also notify other cats to stop chasing this bait (avoids rare bug of having another bait spawned with the just released pooled bait object,
 		// and messing up the test of whether or not the bait is active and detectable to continue chasing it, allowing cats to chase the recycled bait at the other side of the map)
 		// another solution is to wait at least one frame before recycling a pooled object to make sure all connections are canceled during the next FSM update transitions
-		bait.Despawn();
+
+		// new version: start eating
+		bait.OnEat(this);
 	}
 
 	#endregion
@@ -270,7 +272,6 @@ public class Enemy : MonoBehaviour
 			var bait = other.GetComponent<Bait>();
 			Debug.LogFormat("{0} touches {1}", this, bait);
 			Eat(bait);
-			Wander();
 		}
     }
 
@@ -315,6 +316,7 @@ public class Enemy : MonoBehaviour
 	/// Event method called when the chased bait has disappeared for any reason
 	/// </summary>
 	public void OnBaitDisappeared () {
+		// whether chasing or eating the bait, if bait disappeared, wander
 		Wander();
 	}
 

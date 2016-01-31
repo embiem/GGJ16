@@ -38,8 +38,12 @@ public class Ritual : MonoBehaviour
             ItemAddedParticle.SetActive(true);
             StartCoroutine(DeactivateParticle());
         }
-        else
-            ExtraBubblesPS.Play();
+		else {
+			// still some collectibles to add
+			GameManager.current.ShowXMoreToGoMessage(GameManager.current.NeededScore - currScore);
+
+			ExtraBubblesPS.Play();
+		}
     }
 
     IEnumerator DeactivateParticle()
@@ -48,4 +52,6 @@ public class Ritual : MonoBehaviour
         ItemAddedParticle.SetActive(false);
         GameManager.current.OnWin();
     }
+
+
 }

@@ -7,10 +7,16 @@ public class Bait : MonoBehaviour, IPooledObject {
 //	new Rigidbody rigidbody;
 	new	BoxCollider collider;
 
+	public float EatTime = 2f;
+
 	private bool detectable;
 	public bool Detectable { get { return detectable; } }
 
 	List<Enemy> chasingCats = new List<Enemy>();
+	List<Enemy> eatingCats = new List<Enemy>();
+
+	bool isEaten; // is it currently being eaten?
+	float eatRemainingTime;
 
 	// Use this for initialization
 	void Awake () {
@@ -20,6 +26,15 @@ public class Bait : MonoBehaviour, IPooledObject {
 	}
 
 	void Start () {
+	}
+
+	void FixedUpdate () {
+		if (isEaten) {
+			eatRemainingTime -= Time.deltaTime;
+			if (eatRemainingTime <= 0) {
+				Despawn();
+			}
+		}
 	}
 
 	/// Is the object currently used? It cannot be requested if true.
@@ -39,9 +54,12 @@ public class Bait : MonoBehaviour, IPooledObject {
 		}
 		detectable = value;
 		collider.enabled = value;
-		if (chasingCats.Count > 0 && !value) {
+		if ((chasingCats.Count > 0 || eatingCats.Count > 0) && !value) {
 			// object deactivated while active and has registered cats (eg cannot has not just been spawned), notify them
 			NotifyDisappear();
+			// then unregister them so that when recycled, the bait is clean
+			chasingCats.Clear();
+			eatingCats.Clear();
 		}
 	}
 
@@ -49,11 +67,15 @@ public class Bait : MonoBehaviour, IPooledObject {
 		Debug.LogFormat("Spawn {1}detectable bait at {0}", position, isDetectable ? "" : "un");
 		transform.position = position;
 		transform.rotation = rotation;
+		isEaten = false;
+		eatRemainingTime = 0f;
 		gameObject.SetActive(true);
 		SetDetectable(isDetectable);
 	}
 
 	public void Despawn () {
+		isEaten = false;
+		eatRemainingTime = 0f;
 		SetDetectable(false);
 		gameObject.SetActive(false);
 	}
@@ -69,6 +91,14 @@ public class Bait : MonoBehaviour, IPooledObject {
 		chasingCats.Remove(cat);
 	}
 
+	public void RegisterEatingCat (Enemy cat) {
+		eatingCats.Add(cat);
+	}
+
+	public void UnregisterEatingCat (Enemy cat) {
+		eatingCats.Remove(cat);
+	}
+
 	/// <summary>
 	/// Notify all chasing cats.
 	/// </summary>
@@ -76,6 +106,28 @@ public class Bait : MonoBehaviour, IPooledObject {
 		foreach (Enemy cat in chasingCats) {
             if (cat != null)
 			    cat.OnBaitDisappeared();
+		}
+		foreach (Enemy cat in eatingCats) {
+            if (cat != null)
+			    cat.OnBaitDisappeared();
+		}
+	}
+
+	/// <summary>
+	/// Starts being eaten by cat
+	/// </summary>
+	public void OnEat (Enemy cat) {
+		// register eating cat
+		RegisterEatingCat(cat);
+		// unregister from chasing if present (99% of cases since cat chase anything around, BUT not always since you can drop a bait just on a cat and it eats it immediately)
+		if (chasingCats.Contains(cat)) {
+			UnregisterChasingCat(cat);
+		}
+
+		// if already eaten by a cat, do NOT reset timer!
+		if (!isEaten) {
+			isEaten = true;
+			eatRemainingTime = EatTime;
 		}
 	}
 
