@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         UserInterfaceManager.GameStartText.gameObject.SetActive(true);
         iTween.ShakeRotation(UserInterfaceManager.GameStartText.gameObject, Vector3.forward * 15f, 1.5f);
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2.5f);
         LeanTween.scale(UserInterfaceManager.GameStartText.gameObject, Vector3.zero, 0.5f).setOnComplete(() => {
             UserInterfaceManager.GameStartText.gameObject.SetActive(false);
         });
