@@ -35,6 +35,8 @@ public class Ritual : MonoBehaviour
 
             LeanTween.color(Glyph.gameObject, Color.white, 1f);
 
+            GameManager.current.UIManage.SkillBar.Close();
+
             ItemAddedParticle.SetActive(true);
             StartCoroutine(DeactivateParticle());
         }

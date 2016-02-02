@@ -24,6 +24,13 @@ public class UIWindow
 public class WinLooseWindow_Container : UIWindow
 {
     public Text WinLooseText;
+
+    public override void Open()
+    {
+        base.Open();
+
+        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 0f, 0f, 1f }, 1f);
+    }
 }
 
 [System.Serializable]

@@ -145,7 +145,7 @@ public class Player : MonoBehaviour
                 DoFreezeSkill();
             }
 
-			if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.F))
+			if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.G))
             {
                 DoBombSkill();
             }
@@ -195,7 +195,7 @@ public class Player : MonoBehaviour
 	                    Debug.Log("Raycast didn't hit anything!");
 	                }
 	            }
-				else if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.G)) {
+				else if (Input.GetMouseButtonDown(1) || Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.F)) {
 					if (!HasCollectable) {
 						RaycastHit hit;
 						Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);

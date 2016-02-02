@@ -79,8 +79,7 @@ public class Enemy : MonoBehaviour
 
 	void OnPathCallback (bool reachable)
 	{
-		if (!reachable)
-			Debug.LogWarning(name + ": Not Reachable Path");
+
 	}
 
     IEnumerator AfterJump()
@@ -157,7 +156,7 @@ public class Enemy : MonoBehaviour
 						Wander();
 					}
 					else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
-						Debug.LogWarning("ODD CASE: chased bait target reached before state changed, please check your triggers");
+						//Debug.LogWarning("ODD CASE: chased bait target reached before state changed, please check your triggers");
 //						Wander();
 						myPathfinder.NewTarget(currChasedBait.transform, myPathCallback, -1, true);
 					}

@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour 
 {
@@ -54,6 +55,25 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         UIManage.BombsCountTxt.text = player.BombCount.ToString();
 
+        // Optimization
+        /*
+        Shelf[] shelfs = GameObject.FindObjectsOfType<Shelf>();
+        List<MeshFilter> shelfMeshes = new List<MeshFilter>();
+        for (int i = 0; i < shelfs.Length; i++)
+            shelfMeshes.AddRange(shelfs[i].GetComponentsInChildren<MeshFilter>());
+
+        CombineInstance[] combine = new CombineInstance[shelfMeshes.Count];
+        for (int i = 0; i < shelfMeshes.Count; i++)
+        {
+            combine[i].mesh = shelfMeshes[i].sharedMesh;
+            combine[i].transform = shelfMeshes[i].transform.localToWorldMatrix;
+            shelfMeshes[i].gameObject.SetActive(false);
+        }
+        GameObject allShelves = new GameObject("AllShelves");
+        allShelves.AddComponent<MeshFilter>().mesh = new Mesh();
+        allShelves.GetComponent<MeshFilter>().mesh.CombineMeshes(combine, true, true);
+        */
+
         ingame = true;
 
         UIManage.GameStartText.gameObject.SetActive(true);
@@ -99,10 +119,10 @@ public class GameManager : MonoBehaviour
                 UIManage.SkillBombBtn.interactable = false;
 
             UIManage.ManaHandle.offsetMax = new Vector2(UIManage.ManaHandle.offsetMax.x,
-                Mathf.Lerp(-110f, -15f, (float)Player.CurrentMana / (float)Player.MaxMana));
+                Mathf.Lerp(-85f, -10f, (float)Player.CurrentMana / (float)Player.MaxMana));
 
             UIManage.HealthHandle.offsetMax = new Vector2(UIManage.HealthHandle.offsetMax.x,
-                Mathf.Lerp(-110f, -15f, (float)Player.CurrentHealth / (float)Player.MaxHealth));
+                Mathf.Lerp(-85f, -10f, (float)Player.CurrentHealth / (float)Player.MaxHealth));
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -121,8 +141,6 @@ public class GameManager : MonoBehaviour
         if (ingame)
         {
             ingame = false;
-
-            UIManage.SkillBar.Close();
 
             StartCoroutine(ShowEndGame());
         }
