@@ -7,8 +7,6 @@ Project("{C0C37F77-FC48-6B63-9EAB-72A83CA38966}") = "GGJ 2016 - Cat tower defens
 EndProject
 Project("{C0C37F77-FC48-6B63-9EAB-72A83CA38966}") = "GGJ 2016 - Cat tower defense", "Assembly-CSharp-Editor.csproj", "{A0413D60-0C33-C81C-E480-4BAD7B6D81F9}"
 EndProject
-Project("{C0C37F77-FC48-6B63-9EAB-72A83CA38966}") = "GGJ 2016 - Cat tower defense", "Assembly-UnityScript.unityproj", "{60915C48-DF08-2E90-9D97-92C481F26AFA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,10 +25,6 @@ Global
 		{A0413D60-0C33-C81C-E480-4BAD7B6D81F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A0413D60-0C33-C81C-E480-4BAD7B6D81F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A0413D60-0C33-C81C-E480-4BAD7B6D81F9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{60915C48-DF08-2E90-9D97-92C481F26AFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{60915C48-DF08-2E90-9D97-92C481F26AFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{60915C48-DF08-2E90-9D97-92C481F26AFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{60915C48-DF08-2E90-9D97-92C481F26AFA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
