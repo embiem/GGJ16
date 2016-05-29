@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     private bool ingame; public bool IsIngame { get { return ingame; } }
     private Player player; public Player Player { get { return player; } }
 
+    void Awake() {
+
+    }
+
     void Start()
     {
         UIManage.MainMenuWindow.Open();
@@ -52,6 +56,11 @@ public class GameManager : MonoBehaviour
         while (!async.isDone)
             yield return new WaitForEndOfFrame();
 
+        yield return StartCoroutine(StartGame());
+    }
+
+    public IEnumerator StartGame()
+    {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         UIManage.BombsCountTxt.text = player.BombCount.ToString();
 
