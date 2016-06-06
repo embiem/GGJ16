@@ -4,6 +4,66 @@
 		"selected_items":
 		[
 			[
+				"Stop",
+				"StopEatingFood"
+			],
+			[
+				"System",
+				"System.Linq"
+			],
+			[
+				"Offe",
+				"OfferingManager"
+			],
+			[
+				"remain",
+				"remainingTimeBeforeHungry"
+			],
+			[
+				"Fixe",
+				"FixedUpdate"
+			],
+			[
+				"Bait",
+				"BaitManager"
+			],
+			[
+				"Collec",
+				"CollectableItem"
+			],
+			[
+				"log",
+				"log	Debug.Log"
+			],
+			[
+				"nbPortio",
+				"nbPortionsLeft"
+			],
+			[
+				"GameMa",
+				"GameManager.current.OnLoose"
+			],
+			[
+				"MainMe",
+				"MainMenuWindow"
+			],
+			[
+				"UIMA",
+				"UIManage"
+			],
+			[
+				"Loadi",
+				"LoadSceneMode.Additive"
+			],
+			[
+				"Load",
+				"LoadScene"
+			],
+			[
+				"GamMa",
+				"GameManager.Instance"
+			],
+			[
 				"LogWar",
 				"LogWarningFormat"
 			],
@@ -142,10 +202,6 @@
 			[
 				"Inst",
 				"Instance"
-			],
-			[
-				"Load",
-				"LoadKanjiVGForChapter"
 			],
 			[
 				"Insta",
@@ -458,67 +514,109 @@
 			[
 				"sende",
 				"senseiData"
-			],
-			[
-				"lof",
-				"logf	Debug.LogFormat"
-			],
-			[
-				"Name",
-				"NameText"
-			],
-			[
-				"Ins",
-				"Instance"
-			],
-			[
-				"Deser",
-				"DeserializeObject"
-			],
-			[
-				"Sc",
-				"Scenes"
-			],
-			[
-				"Visu",
-				"VisualNovel"
-			],
-			[
-				"load",
-				"loadSceneOperation"
-			],
-			[
-				"Title",
-				"TitleScreen"
-			],
-			[
-				"log",
-				"log	Debug.Log"
-			],
-			[
-				"Fade",
-				"FadeOut"
-			],
-			[
-				"Scre",
-				"ScreenManager"
-			],
-			[
-				"visib",
-				"visibleColor"
-			],
-			[
-				"invis",
-				"invisibleColor"
-			],
-			[
-				"visi",
-				"visibleColor"
 			]
 		]
 	},
 	"buffers":
 	[
+		{
+			"file": "Assets/_Code/Food.cs",
+			"settings":
+			{
+				"buffer_size": 4546,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/Bait.cs",
+			"settings":
+			{
+				"buffer_size": 560,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/CollectableItem.cs",
+			"settings":
+			{
+				"buffer_size": 2152,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "Searching 14023 files for \"dropped\"\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\.git\\objects\\pack\\pack-0da8997e894f079a02756d740d2fb276ee5397b2.pack:\n    File too large, skipping\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Assets\\_Code\\CollectableItem.cs:\n   55      }\n   56  \n   57:     public void Dropped(Vector3 position) {\n   58          SetIgnored(false);\n   59  \n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Assets\\_Code\\Food.cs:\n   85  		if (!Detectable) throw new Exception(\"OnDetectable called when Undetectable\");\n   86  \n   87: 		// start counting time before disappearing when dropped, etc.\n   88  		if (DisappearOnTime)\n   89  			remainingTimeBeforeDisappear = TimeBeforeDisappear;\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Assets\\_Code\\Player.cs:\n   83  	private PlayerState currState;\n   84      private CollectableItem currCollectable;\n   85:     private float lastTimeDropped;\n   86  	private float noMoveTimer;\n   87  \n   ..\n  117  		currState = PlayerState.Walking;\n  118  \n  119:         lastTimeDropped = Time.time;\n  120  \n  121          SelectionRing = GameObject.Instantiate(SelectionRing);\n  ...\n  495      private void PickUpCollectable(CollectableItem collectableItem)\n  496      {\n  497:         if (Time.time - lastTimeDropped > 2f)\n  498          {\n  499              collectableItem.Take();\n  ...\n  514  		{\n  515  			CollectableItem item = currCollectable;\n  516:             currCollectable.Dropped(transform.position + DropItemDistance * transform.forward);\n  517              currCollectable = null;\n  518  \n  519:             lastTimeDropped = Time.time;\n  520  			myPathfinder.speed = NormalSpeed;  // character recovers normal speed when not holding item\n  521  			\n  ...\n  529      public void GiveUpCollectable()\n  530      {\n  531:         if (Time.time - lastTimeDropped > 2f)\n  532          {\n  533  			DropCollectable().Reset();\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Assets\\AstarPathfindingProject\\changelog.cs:\n  694  	- If Unity 3.5 is used, the EditorGUIUtility.isProSkin field is used to toggle between light and dark skin.\n  695  	- Added LayeredGridGraph which works almost the same as grid graphs, but support multiple layers of nodes.\n  696: 	- \\note Dropped Unity 3.3 support.\n  697  \n  698  	 <b>Known Bugs:</b> The C++ version of Recast does not work on Windows\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Builds\\Linux\\DontDoThat v0.9 - Linux x86.x86:\n    <binary>\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Builds\\OSX\\DontDoThat v0.9 - OSX x86.app\\Contents\\MacOS\\DontDoThat v0.9 - OSX x86:\n    <binary>\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Library\\metadata\\15\\15d4ecd3613efbf41b5c96b7150aec9b:\n    <binary>\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Library\\metadata\\26\\26529ba9ef489c1488cd40cf07797f17:\n    <binary>\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Library\\metadata\\e2\\e271255bdfe8941f9ab0acccbb14dd82:\n    <binary>\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Library\\metadata\\f3\\f337ddad89cb1fc45a0ced159c1a635a:\n    <binary>\n\nF:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense\\Temp\\UnityLockfile:\n    ERROR: Unable to open file\n\n24 matches across 10 files\n",
+			"settings":
+			{
+				"buffer_size": 3255,
+				"line_ending": "Windows",
+				"name": "Find Results",
+				"scratch": true
+			}
+		},
+		{
+			"file": "Assets/_Code/Player.cs",
+			"settings":
+			{
+				"buffer_size": 17052,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/GameManager.cs",
+			"settings":
+			{
+				"buffer_size": 7569,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/Enemy.cs",
+			"settings":
+			{
+				"buffer_size": 13702,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/OfferingManager.cs",
+			"settings":
+			{
+				"buffer_size": 488,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/Pattern/SingletonManager.cs",
+			"settings":
+			{
+				"buffer_size": 952,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/BaitManager.cs",
+			"settings":
+			{
+				"buffer_size": 127,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/_Code/Pattern/PoolManager.cs",
+			"settings":
+			{
+				"buffer_size": 2039,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Assets/AstarPathfindingProject/Generators/Utilities/NavMeshRenderer.cs",
+			"settings":
+			{
+				"buffer_size": 737,
+				"line_ending": "Unix"
+			}
+		}
 	],
 	"build_system": "",
 	"build_system_choices":
@@ -564,16 +662,16 @@
 	"command_palette":
 	{
 		"height": 392.0,
-		"last_filter": "",
+		"last_filter": "loca",
 		"selected_items":
 		[
 			[
-				"reve",
-				"File: Reveal"
-			],
-			[
 				"loca",
 				"File: Locate"
+			],
+			[
+				"reve",
+				"File: Reveal"
 			],
 			[
 				"rename",
@@ -788,10 +886,25 @@
 	},
 	"expanded_folders":
 	[
-		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense"
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code"
 	],
 	"file_history":
 	[
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code/Pattern/IPooledObject.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/Core/AstarPath.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code/UIManager.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code/PathfinderAgent.cs",
+		"/F/tmp/dontdothat Y record",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code/Player.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code/DebugSceneLoader.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/AstarPathfindingProject/ExampleScenes/Example11_RVO/GroupController.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/LeanTween/Examples/Scripts/TestingEverything.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/",
+		"/F/Developer/Video/ffmpeg-20160530-git-d74cc61-win64-shared/README.txt",
+		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/Introloop/Scripts/IntroloopTrack.cs",
+		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/dontdothat.sublime-project",
 		"/F/Projects/Video Games/GGJ 2016 - Cat tower defense/Assets/_Code/GameManager.cs",
 		"/F/Dropbox/Macbook_backup/apartment/Caillaux/Gestion Freebox",
 		"/F/Dropbox/Macbook_backup/apartment/Caillaux/free 67",
@@ -906,30 +1019,18 @@
 		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/Game/Menu/Scripts/SenseiCardClickArea.cs",
 		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/Game/Menu/Scripts/SelectionPhase.cs",
 		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/Game/Editor/Test/KanjiRecognizerTest.cs",
-		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/VectrosityDemos/Scripts/Curve/SimpleCurve.js",
-		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/Commons/Editor/StagPoint/Immediate Window/Editor/ImmediateWindow.cs",
-		"/F/Projects/Web/Webfaction/Blog/wp-config.php",
-		"/F/Projects/Web/Webfaction/Portfolio/wp-cron.php",
-		"/F/Projects/Web/Webfaction/Portfolio/db_backups/huulong_portfoli.cnf",
-		"/F/Projects/Web/Webfaction/Portfolio/db_backups/cron.log",
-		"/F/Projects/Web/Webfaction/Blog/db_backups/huulong_blog.cnf",
-		"/F/Projects/Web/Webfaction/Blog/sql queries",
-		"/F/Projects/Web/Webfaction/Portfolio301redirect/.htaccess",
-		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/Game/Menu/Scripts/MissionSelectionManager.cs",
-		"/C/Users/acro_/Google Drive/IDE 05 - Manga-ville/External Communication/Events/retours TIU.txt",
-		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/unity-ui-extensions/Scripts/Editor/CanvasGroupActivator.cs",
-		"/F/Developer/Unity/Vectrosity 5/Vectrosity Source/Scripts/VectorObject2D.cs",
-		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/VectrosityDemos/Scripts/Curve/DrawCurve.js"
+		"/F/Projects/Video Games/IDE 05 - Manga-ville/Unity - Manga-ville/Assets/VectrosityDemos/Scripts/Curve/SimpleCurve.js"
 	],
 	"find":
 	{
-		"height": 32.0
+		"height": 40.0
 	},
 	"find_in_files":
 	{
 		"height": 105.0,
 		"where_history":
 		[
+			"<open folders>",
 			"F:\\Projects\\Video Games\\IDE 05 - Manga-ville\\Unity - Manga-ville\\Assets, *.cs",
 			"F:\\Projects\\Video Games\\IDE 05 - Manga-ville\\Unity - Manga-ville\\Assets\\Game, *.cs",
 			"F:\\Projects\\Video Games\\IDE 05 - Manga-ville\\Unity - Manga-ville\\",
@@ -952,6 +1053,42 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"attack",
+			"giveupco",
+			"dropcolle",
+			"attack",
+			"dropped",
+			"onundetec",
+			"isHungry",
+			"hungry",
+			"hungr",
+			"is",
+			"ishung",
+			"added",
+			"OnBaitDisappeared",
+			"bait",
+			"detecta",
+			"isDetectable",
+			"Attack",
+			"CurrrentState",
+			"NewFleeTarget",
+			"bait",
+			"foo",
+			"Bait",
+			"bait",
+			"lastTimeTossed",
+			"GiveUpCollectable",
+			"DropCollectable",
+			"speed",
+			"HealthHandle",
+			"heal",
+			"mana",
+			"currMana",
+			"keycode",
+			"debug",
+			"mainmen",
+			"mainme",
+			"loadsc",
 			"menu",
 			"startmissi",
 			"hidedrawingch",
@@ -1043,43 +1180,7 @@
 			"nextStrokeIndex",
 			"nextDrawingLineIndex",
 			"AddDrawingLineVertex",
-			"AddStrokeVertex",
-			"AddDrawVertex",
-			"screenPoint",
-			"touchPosition",
-			"addpathve",
-			"userStrokes",
-			"evalu",
-			"actived",
-			"activedr",
-			"drawingli",
-			"drawinglie",
-			"drawlin",
-			"maxstr",
-			"drawinglines",
-			"count",
-			"drawpath",
-			"drawingLines",
-			"drawPath",
-			"drawstro",
-			"KanjiDrawingArea",
-			"resume",
-			"voiceLibrary",
-			"fair",
-			"probability",
-			"second",
-			"Second",
-			"second",
-			"Tuple",
-			"\"SceneManager.GetSceneAt(i).name: {0}\"",
-			"SceneManager.GetSceneAt(i).name",
-			"\n			Debug.LogFormat(\"",
-			"loadsceneadd",
-			"instance.loadsceneadd",
-			"transform.parent",
-			"SceneManager.GetSceneAt(i)",
-			"instantiateunder",
-			"endbattlet"
+			"AddStrokeVertex"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1104,8 +1205,1139 @@
 	"groups":
 	[
 		{
+			"selected": 6,
 			"sheets":
 			[
+				{
+					"buffer": 0,
+					"file": "Assets/_Code/Food.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 4546,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								4480,
+								4480
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 2209.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "Assets/_Code/Bait.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 560,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								229,
+								229
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Assets/_Code/CollectableItem.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2152,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2050,
+								2050
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3255,
+						"regions":
+						{
+							"match":
+							{
+								"flags": 112,
+								"regions":
+								[
+									[
+										320,
+										327
+									],
+									[
+										619,
+										626
+									],
+									[
+										927,
+										934
+									],
+									[
+										1058,
+										1065
+									],
+									[
+										1290,
+										1297
+									],
+									[
+										1466,
+										1473
+									],
+									[
+										1612,
+										1619
+									],
+									[
+										1847,
+										1854
+									],
+									[
+										2261,
+										2268
+									]
+								],
+								"scope": ""
+							}
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"default_dir": "F:\\Projects\\Video Games\\GGJ 2016 - Cat tower defense",
+							"detect_indentation": false,
+							"encoding_helper_encoding": "",
+							"line_numbers": false,
+							"output_tag": 1,
+							"result_base_dir": "",
+							"result_file_regex": "^([^ 	].*):$",
+							"result_line_regex": "^ +([0-9]+):",
+							"scroll_past_end": true,
+							"syntax": "Packages/Default/Find Results.hidden-tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 384.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "Assets/_Code/Player.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 17052,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								14597,
+								14597
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 11041.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "Assets/_Code/GameManager.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7569,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								443,
+								443
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 384.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "Assets/_Code/Enemy.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13702,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6559,
+								6559
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 4249.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "Assets/_Code/OfferingManager.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 488,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								231,
+								231
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "Assets/_Code/Pattern/SingletonManager.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 952,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								471,
+								488
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "Assets/_Code/BaitManager.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 127,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								59,
+								59
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "Assets/_Code/Pattern/PoolManager.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2039,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1587,
+								1587
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "Assets/AstarPathfindingProject/Generators/Utilities/NavMeshRenderer.cs",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 737,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								530,
+								530
+							]
+						],
+						"settings":
+						{
+							"BracketHighlighterBusy": false,
+							"bh_regions":
+							[
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
+							],
+							"encoding_helper_encoding": "UTF-8",
+							"encoding_thread_running": true,
+							"syntax": "Packages/SublimeUnityCSharp/Syntaxes/UnityC#.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 137.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				}
 			]
 		}
 	],
@@ -1161,6 +2393,58 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"single",
+				"Assets\\_Code\\Pattern\\SingletonManager.cs"
+			],
+			[
+				"batiman",
+				"Assets\\_Code\\BaitManager.cs"
+			],
+			[
+				"ene",
+				"Assets\\_Code\\Enemy.cs"
+			],
+			[
+				"enem",
+				"Assets\\_Code\\Enemy.cs"
+			],
+			[
+				"player",
+				"Assets\\_Code\\Player.cs"
+			],
+			[
+				"enemy",
+				"Assets\\_Code\\Enemy.cs"
+			],
+			[
+				"playr",
+				"Assets\\_Code\\Player.cs"
+			],
+			[
+				"gamema",
+				"Assets\\_Code\\GameManager.cs"
+			],
+			[
+				"colla",
+				"Assets\\_Code\\CollectableItem.cs"
+			],
+			[
+				"bait",
+				"Assets\\_Code\\Bait.cs"
+			],
+			[
+				"testing",
+				"Assets\\LeanTween\\Examples\\Scripts\\TestingEverything.cs"
+			],
+			[
+				"test",
+				"Assets\\LeanTween\\Examples\\Scripts\\TestingEverything.cs"
+			],
+			[
+				"food",
+				"Assets\\_Code\\Food.cs"
+			],
 			[
 				"visua",
 				"Assets\\Game\\Visual Novel\\Scripts\\VisualNovelManager.cs"
@@ -1570,10 +2854,6 @@
 				"Assets\\Game\\Battle\\Scripts\\Manager\\BattleManager.cs"
 			],
 			[
-				"gamema",
-				"Assets\\Game\\Global\\Scripts\\GameManager.cs"
-			],
-			[
 				"bavie",
 				"Assets\\Game\\Battle\\Scripts\\UI\\BattleView.cs"
 			],
@@ -1624,54 +2904,6 @@
 			[
 				"rect",
 				"Assets\\$N Multistroke Recognizer\\RectangleR.cs"
-			],
-			[
-				"except",
-				"Assets\\Commons\\Helper\\Util\\ExceptionsUtil.cs"
-			],
-			[
-				"penta",
-				"Assets\\$N Multistroke Recognizer\\samples\\pentagon.xml"
-			],
-			[
-				"button",
-				"Assets\\Standard Assets\\CrossPlatformInput\\Scripts\\ButtonHandler.cs"
-			],
-			[
-				"imageeid",
-				"Assets\\Commons\\Helper\\UI\\Editor\\ImagePlusEditor.cs"
-			],
-			[
-				"imageex",
-				"Assets\\unity-ui-extensions\\Scripts\\ImageExtended.cs"
-			],
-			[
-				"imagee",
-				"Assets\\unity-ui-extensions\\Scripts\\ImageExtended.cs"
-			],
-			[
-				"image",
-				"Assets\\unity-ui-extensions\\Scripts\\ImageExtended.cs"
-			],
-			[
-				"newton",
-				"Assets\\Plugins\\JsonNET\\Newtonsoft.Json.xml"
-			],
-			[
-				"databas",
-				"Assets\\Game\\Global\\Scripts\\DatabaseManager.cs"
-			],
-			[
-				"dabama",
-				"Assets\\Game\\Global\\Scripts\\DatabaseManager.cs"
-			],
-			[
-				"senseca",
-				"Assets\\Game\\Menu\\Scripts\\SenseiCard.cs"
-			],
-			[
-				"pool",
-				"Assets\\Commons\\Pattern\\PoolManager.cs"
 			]
 		],
 		"width": 0.0
@@ -1679,9 +2911,13 @@
 	"select_project":
 	{
 		"height": 500.0,
-		"last_filter": "mars",
+		"last_filter": "man",
 		"selected_items":
 		[
+			[
+				"man",
+				"F:\\Projects\\Video Games\\IDE 05 - Manga-ville\\Unity - Manga-ville\\manga-ville.sublime-project"
+			],
 			[
 				"mars",
 				"F:\\Projects\\Video Games\\IDE 02 - Martian Coop\\Unity - Martian Coop\\Unity - Martian Coop.sublime-project"
@@ -1699,10 +2935,14 @@
 	},
 	"select_symbol":
 	{
-		"height": 104.0,
-		"last_filter": "resample",
+		"height": 150.0,
+		"last_filter": "uiwin",
 		"selected_items":
 		[
+			[
+				"uiwin",
+				"UIWindow"
+			],
 			[
 				"resample",
 				"ResampleMultistroke"
@@ -1868,7 +3108,7 @@
 				"Build"
 			]
 		],
-		"width": 392.0
+		"width": 400.0
 	},
 	"selected_group": 0,
 	"settings":

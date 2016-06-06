@@ -26,7 +26,7 @@ public class Ritual : MonoBehaviour
     {
         item.Added();
 
-        Destroy(item.gameObject);
+//        Destroy(item.gameObject);
         CurrentScore++;
         
         if (CurrentScore >= GameManager.current.NeededScore)

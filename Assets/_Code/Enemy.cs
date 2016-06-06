@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Enemy : MonoBehaviour
 {
@@ -8,25 +9,27 @@ public class Enemy : MonoBehaviour
 	{
 		MovingAround,
 		ChasingPlayer,
-		ChasingBait
-
+		ChasingFood,
+		EatingFood
 	}
 
 	[Header("Assignments")]
 	public GameObject ExplosionPS;
-    public Renderer KittyRenderer;
-    public Texture[] KittyTextures;
-    public AudioSource ExplosionSound;
-    public AudioSource AttackSound;
-    public Animator AnimatorController;
-    public GameObject SnailObject;
-    public GameObject KittyObject;
+	public Renderer KittyRenderer;
+	public Texture[] KittyTextures;
+	public AudioSource ExplosionSound;
+	public AudioSource AttackSound;
+	public Animator AnimatorController;
+	public GameObject SnailObject;
+	public GameObject KittyObject;
 
 	[Header("Balancing")]
-	public float LooseDistance = 1f;
+//	public float LooseDistance = 2f;
 	public float SlowedSpeed = 2;
 	public float NormalSpeed = 4;
 	public float FollowSpeed = 7;
+	public float TimeBeforeHungry = 2f;
+	public float EatingDuration = 3f;
 
 	[Header("Sensor")]
 	public float sensorRadius = 10f;
@@ -36,30 +39,38 @@ public class Enemy : MonoBehaviour
 
 	private Transform target;
 	private EnemyState currState;
-    public EnemyState CurrrentState
-    {
-        get { return currState; }
+	public EnemyState CurrentState
+	{
+		get { return currState; }
 
-        set
-        {
-            if (currState != value)
-            {
-                currState = value;
-                if (currState == EnemyState.ChasingPlayer)
-                    GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f , 0f, 0f }, 1f);
-                else
-                    if (currState == EnemyState.MovingAround)
-                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 1f);
-            }
-        }
-    }
+		set
+		{
+			if (currState != value)
+			{
+				currState = value;
+				if (currState == EnemyState.ChasingPlayer)
+					GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f , 0f, 0f }, 1f);
+				else
+					if (currState == EnemyState.MovingAround)
+						GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 1f);
+			}
+		}
+	}
 
 	private float currSlowLength;
 	private float slowTimer;
 	private bool hasSlowEffect;
 	private GameObject currEffectParticle;
-	private Bait currChasedBait;
-    private bool attacking;
+	private Food currChasedFood;
+	private Food currEatenFood;
+	private bool attacking;
+
+	private bool hungry;
+	private float remainingTimeBeforeHungry;
+	public bool IsEating {
+		get { return currEatenFood != null; }
+	}
+	private float remainingTimeBeforeEatingPortion;
 
 	IEnumerator Start ()
 	{
@@ -70,11 +81,21 @@ public class Enemy : MonoBehaviour
 		while (GameManager.current.Player == null)
 			yield return new WaitForEndOfFrame ();
 
+		Setup();
+
+		KittyRenderer.material.SetTexture("_MainTex", KittyTextures[Random.Range(0, KittyTextures.Length)]);
+	}
+
+	public void Setup () {
 		myPathfinder.speed = NormalSpeed;
-		CurrrentState = EnemyState.MovingAround;
+		CurrentState = EnemyState.MovingAround;
 		myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 100));
 
-        KittyRenderer.material.SetTexture("_MainTex", KittyTextures[Random.Range(0, KittyTextures.Length)]);
+		hungry = true;
+		remainingTimeBeforeHungry = 0f;
+		currChasedFood = null;
+		currEatenFood = null;
+		remainingTimeBeforeEatingPortion = 0f;
 	}
 
 	void OnPathCallback (bool reachable)
@@ -82,48 +103,63 @@ public class Enemy : MonoBehaviour
 
 	}
 
-    IEnumerator AfterJump()
-    {
-        yield return new WaitForSeconds(1.5f);
+	void Attack () {
+		attacking = true;
+		myPathfinder.SetCanMove(false);
+		myPathfinder.RotateTo(GameManager.current.Player.transform.position);
+		AnimatorController.SetTrigger("Jump");
+		StartCoroutine(AfterJump());
+		AttackSound.Play();
+	}
 
-        if (Vector3.Distance(GameManager.current.Player.transform.position, transform.position) < 2)
-            GameManager.current.Player.OnAttackByCat();
+	IEnumerator AfterJump()
+	{
+		// REFACTOR: replace with collision box, and no such time
+		yield return new WaitForSeconds(1.5f);
 
-        yield return new WaitForSeconds(0.5f);
-        attacking = false;
-        myPathfinder.SetCanMove(true);
-    }
+		if (Vector3.Distance(GameManager.current.Player.transform.position, transform.position) < 2)
+			GameManager.current.Player.OnAttackByCat();
 
-	void Update ()
+		yield return new WaitForSeconds(0.5f);
+		attacking = false;
+		myPathfinder.SetCanMove(true);
+	}
+
+	void Update () {
+		if (GameManager.current.IsIngame)
+		{
+		#if UNITY_EDITOR
+			if (Input.GetKeyDown(KeyCode.Alpha9))
+				Die();
+		#endif
+		}
+	}
+
+	void FixedUpdate ()
 	{
 		if (GameManager.current.IsIngame)
-        {
-        #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.Alpha9))
-				Die();
-        #endif
+		{
 
-            if (Vector3.Distance(GameManager.current.Player.transform.position, transform.position) < 2 && !attacking)
-            {
-                attacking = true;
-                myPathfinder.SetCanMove(false);
-                myPathfinder.RotateTo(GameManager.current.Player.transform.position);
-                AnimatorController.SetTrigger("Jump");
-                StartCoroutine(AfterJump());
-                AttackSound.Play();
-            }
+			if (Vector3.Distance(GameManager.current.Player.transform.position, transform.position) < 2 && !attacking)
+			{
+				Attack();
+			}
 
 			if (!hasSlowEffect) {
 
-				Bait bait;
+				Food food = null;
 
-                switch (CurrrentState)
-                {
+				// STATE TRANSITIONS
+				switch (CurrentState)
+				{
 				case EnemyState.ChasingPlayer:
-					bait = GetNearestDetectableBaitWithinSensorRadius();
-					if (bait != null) {
-						// seek bait
-						ChaseBait(bait);
+					// if hungry, chase food (offering or bait) before player, since easier to catch
+					// else, do as if no food here
+					if (hungry)
+						food = GetNearestDetectableFoodWithinSensorRadius();
+					if (food != null) {
+						// seek food
+						ChaseFood(food);
 					} else if ((GameManager.current.Player == null || !GameManager.current.Player.HasCollectable) && !myPathfinder.CalculatingPath) {
 						Wander();
 					} else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
@@ -133,10 +169,11 @@ public class Enemy : MonoBehaviour
 					break;
 				default:
 				case EnemyState.MovingAround:
-					bait = GetNearestDetectableBaitWithinSensorRadius();
-					if (bait != null) {
-						Debug.LogFormat("{0} has found bait {1}", this, bait);
-						ChaseBait(bait);
+					if (hungry)
+						food = GetNearestDetectableFoodWithinSensorRadius();
+					if (food != null) {
+						Debug.LogFormat("{0} has found food {1}", this, food);
+						ChaseFood(food);
 					} else if (GameManager.current.Player != null && GameManager.current.Player.HasCollectable && IsWithinSensorRadius(GameManager.current.Player.transform) && !myPathfinder.CalculatingPath) {
 						ChasePlayer();
 					} else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
@@ -145,44 +182,77 @@ public class Enemy : MonoBehaviour
 						myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
 					}
 					break;
-				case EnemyState.ChasingBait:
-					// never give up on bait even if gets out of range: cats will remember the path to get them anyway, and this will avoid odd behaviour
-					// such as starting chasing the bait then wander in the middle; while allowing strategy such as throwing the bait in the sensor radius of a cat
+				case EnemyState.ChasingFood:
+					// never give up on (valid) food even if gets out of range: cats will remember the path to get them anyway, and this will avoid odd behaviour
+					// such as starting chasing the food then wander in the middle; while allowing strategy such as throwing the food in the sensor radius of a cat
 					// while forcing it to make a long detour to eat it
 
-					// however, if the bait is rotten (disappears) or another cat has eaten it, stop
-					if (currChasedBait == null || !currChasedBait.Detectable) {
-						// give up on bait (or bait does not exist anymore) -> wander
+					// however, if the food is rotten (disappears) or another cat has eaten it, or it is not hungry anymore, stop
+					if (currChasedFood == null || !currChasedFood.Detectable || !hungry) {
+						// give up on food (or food does not exist anymore) -> wander
 						Wander();
 					}
 					else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
-						//Debug.LogWarning("ODD CASE: chased bait target reached before state changed, please check your triggers");
+						//Debug.LogWarning("ODD CASE: chased food target reached before state changed, please check your triggers");
 //						Wander();
-						myPathfinder.NewTarget(currChasedBait.transform, myPathCallback, -1, true);
+						myPathfinder.NewTarget(currChasedFood.transform, myPathCallback, -1, true);
+					}
+					break;
+				case EnemyState.EatingFood:
+					// test currEatenFood, in case food appeared just in front of cat and was never chased
+					if (currEatenFood == null || !currEatenFood.Detectable || !hungry) {
+						StopEatingFood();
+						Wander();
+					}
+					else if (myPathfinder.TargetReached && !myPathfinder.CalculatingPath) {
+						// keep same target, but in practice should eat without moving, and if food moved should switch to ChaseFood again
+						myPathfinder.NewTarget(currEatenFood.transform, myPathCallback, -1, true);
 					}
 					break;
 				}  // end switch
 				
 			}
 
+			if (!hungry) {
+				remainingTimeBeforeHungry -= Time.deltaTime;
+				if (remainingTimeBeforeHungry <= 0) {
+					hungry = true;
+				}
+			}
+
+			if (IsEating) {
+				// FIXME: prevent eating while sleeping
+				remainingTimeBeforeEatingPortion -= Time.deltaTime;
+				if (remainingTimeBeforeEatingPortion <= 0)
+				{
+					// eat 1 portion and get satiated
+					// if this results in the food disappearing, the notification system will automatically make the cat leave afterward
+					currEatenFood.ConsumePortion();
+					StopEatingFood();
+
+					hungry = false;
+					remainingTimeBeforeHungry = TimeBeforeHungry;
+				}
+			}
+
 			if (hasSlowEffect) {
 				slowTimer += Time.deltaTime;
 				if (slowTimer > currSlowLength) {
-                    if (CurrrentState == EnemyState.ChasingPlayer)
-                    {
-                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f, 0f, 0f }, 1f);
-                        myPathfinder.speed = FollowSpeed;
-                    }
-                    else
-                    {
-                        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 1f);
-                        myPathfinder.speed = NormalSpeed;
-                    }
+					if (CurrentState == EnemyState.ChasingPlayer)
+					{
+						GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 1f, 0f, 0f }, 1f);
+						myPathfinder.speed = FollowSpeed;
+					}
+					else
+					{
+						GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 1f, 0f, 0f, 0f }, 1f);
+						myPathfinder.speed = NormalSpeed;
+					}
 
-                    AnimatorController.SetBool("Sleep", false);
+					AnimatorController.SetBool("Sleep", false);
 
-                    SnailObject.SetActive(false);
-                    KittyObject.SetActive(true);
+					SnailObject.SetActive(false);
+					KittyObject.SetActive(true);
 
 					hasSlowEffect = false;
 					currSlowLength = 0f;
@@ -194,11 +264,12 @@ public class Enemy : MonoBehaviour
 				}
 			}
 
-			// Cat takes feed block back when touching magician
-			if (!(hasSlowEffect && myPathfinder.speed == 0) && GameManager.current.Player != null && GameManager.current.Player.HasCollectable && Vector3.Distance(transform.position, GameManager.current.Player.transform.position) < LooseDistance) {
-				Steal(GameManager.current.Player.DropCollectable());
-//                GameManager.current.OnLoose();
-			}
+//			// Cat takes feed block back when touching magician
+//			if (!(hasSlowEffect && myPathfinder.speed == 0) && GameManager.current.Player != null && GameManager.current.Player.HasCollectable && Vector3.Distance(transform.position, GameManager.current.Player.transform.position) < LooseDistance) {
+//				Steal(GameManager.current.Player.DropCollectable());
+////                GameManager.current.OnLoose();
+//			}
+
 		}
 	}
 
@@ -206,28 +277,38 @@ public class Enemy : MonoBehaviour
 	
 	void Wander ()
 	{
-		currChasedBait = null;
+		currChasedFood = null;
+		currEatenFood = null;
 		myPathfinder.speed = NormalSpeed;
 		myPathfinder.NewFleeTarget(transform, myPathCallback, Random.Range(10, 80));
-        CurrrentState = EnemyState.MovingAround;
+		CurrentState = EnemyState.MovingAround;
 	}
 
 	void ChasePlayer () {
-		currChasedBait = null;
+		currChasedFood = null;
+		currEatenFood = null;
 		myPathfinder.speed = FollowSpeed;
 		myPathfinder.NewTarget(GameManager.current.Player.transform, myPathCallback, -1, true);
-		CurrrentState = EnemyState.ChasingPlayer;
+		CurrentState = EnemyState.ChasingPlayer;
 
 	}
 
-	void ChaseBait (Bait bait) {
-		// seek bait
-		currChasedBait = bait;
-		bait.RegisterChasingCat(this);
-
+	void ChaseFood (Food food) {
+		// seek food
+		currChasedFood = food;
+		currEatenFood = null;
+		food.RegisterChasingCat(this);
 		myPathfinder.speed = FollowSpeed;
-		myPathfinder.NewTarget(bait.transform, myPathCallback, -1, true);
-		CurrrentState = EnemyState.ChasingBait;
+		myPathfinder.NewTarget(food.transform, myPathCallback, -1, true);
+		CurrentState = EnemyState.ChasingFood;
+	}
+
+	void StartEating (Food food)
+	{
+		remainingTimeBeforeEatingPortion = EatingDuration;
+		currChasedFood = null;  // cleaner, but be careful
+		currEatenFood = food;  // equal to currChasedFood in most cases, but not 100% sure if we drop food in front of cat or something
+		CurrentState = EnemyState.EatingFood;
 	}
 
 	#endregion
@@ -236,18 +317,20 @@ public class Enemy : MonoBehaviour
 
 	void Steal (CollectableItem item)
 	{
-		//		item.transform.parent = null;
-		item.Reset();
+//		item.Reset();
+		// TODO: add Eat(item) with generic Eat(Food) method
 	}
 
-	public void Eat (Bait bait)
+	public void Eat (Food food)
 	{
-		// despawn will also notify other cats to stop chasing this bait (avoids rare bug of having another bait spawned with the just released pooled bait object,
-		// and messing up the test of whether or not the bait is active and detectable to continue chasing it, allowing cats to chase the recycled bait at the other side of the map)
+		StartEating(food);
+
+		// despawn will also notify other cats to stop chasing this food (avoids rare bug of having another food spawned with the just released pooled food object,
+		// and messing up the test of whether or not the food is active and detectable to continue chasing it, allowing cats to chase the recycled food at the other side of the map)
 		// another solution is to wait at least one frame before recycling a pooled object to make sure all connections are canceled during the next FSM update transitions
 
 		// new version: start eating
-		bait.OnEat(this);
+		food.OnEat(this);
 	}
 
 	#endregion
@@ -260,30 +343,32 @@ public class Enemy : MonoBehaviour
 			Destroy(target.gameObject);
 	}
 
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.tag == "Trap")
-        {
-            Destroy(other.gameObject);
-            Die();
-        }
-		else if (other.tag == "Bait") {
-			var bait = other.GetComponent<Bait>();
-			Debug.LogFormat("{0} touches {1}", this, bait);
-			Eat(bait);
+	void OnTriggerEnter(Collider other)
+	{
+		if (other.tag == "Trap")
+		{
+			Destroy(other.gameObject);
+			Die();
 		}
-    }
+		else if (other.tag == "Bait" || other.tag == "Offering") {
+			var food = other.GetComponent<Food>();
+			if (food.Detectable) {
+				Debug.LogFormat("{0} touches {1}", this, food);
+				Eat(food);
+			}
+		}
+	}
 
 	public void OnSlow (float forSeconds, GameObject zzParticle)
 	{
-        SnailObject.SetActive(true);
-        KittyObject.SetActive(false);
+		SnailObject.SetActive(true);
+		KittyObject.SetActive(false);
 
-        if (currEffectParticle != null)
-        {
-            GameObject.Destroy(currEffectParticle.gameObject);
-            currEffectParticle = null;
-        }
+		if (currEffectParticle != null)
+		{
+			GameObject.Destroy(currEffectParticle.gameObject);
+			currEffectParticle = null;
+		}
 
 		currEffectParticle = zzParticle;
 		currSlowLength = forSeconds;
@@ -294,13 +379,13 @@ public class Enemy : MonoBehaviour
 
 	public void OnFreeze (float forSeconds, GameObject zzParticle)
 	{
-        GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 0f, 1f, 0f }, 1f);
+		GameManager.current.SoundMixer.TransitionToSnapshots(GameManager.current.SoundSnapshots, new float[] { 0f, 0f, 1f, 0f }, 1f);
 
-        if (currEffectParticle != null)
-        {
-            GameObject.Destroy(currEffectParticle.gameObject);
-            currEffectParticle = null;
-        }
+		if (currEffectParticle != null)
+		{
+			GameObject.Destroy(currEffectParticle.gameObject);
+			currEffectParticle = null;
+		}
 
 		currEffectParticle = zzParticle;
 		currSlowLength = forSeconds;
@@ -308,30 +393,41 @@ public class Enemy : MonoBehaviour
 		myPathfinder.speed = 0f;
 		hasSlowEffect = true;
 
-        AnimatorController.SetBool("Sleep", true);
+		AnimatorController.SetBool("Sleep", true);
 	}
 
 	/// <summary>
-	/// Event method called when the chased bait has disappeared for any reason
+	/// Event method called when the chased food has disappeared for any reason
 	/// </summary>
-	public void OnBaitDisappeared () {
-		// whether chasing or eating the bait, if bait disappeared, wander
+	public void OnFoodDisappeared ()
+	{
+		// if the cat was eating, stop now
+		if (IsEating)
+			StopEatingFood();
+		// whether chasing or eating the food, if food disappeared, wander
 		Wander();
 	}
 
 	#endregion
 
+	public void StopEatingFood()
+	{
+		remainingTimeBeforeEatingPortion = 0f;
+		currChasedFood = null;
+		currEatenFood = null;
+	}
+
 	public void Die ()
 	{
-        if (currChasedBait != null)
-            currChasedBait.UnregisterChasingCat(this);
+		if (currChasedFood != null)
+			currChasedFood.UnregisterChasingCat(this);
 
-        ExplosionSound.Play();
-        ExplosionSound.transform.parent = null;
+		ExplosionSound.Play();
+		ExplosionSound.transform.parent = null;
 		myPathfinder.speed = 0f;
 		ExplosionPS.gameObject.SetActive(true);
 		ExplosionPS.transform.parent = null;
-        GameObject.Destroy(this.gameObject);
+		GameObject.Destroy(this.gameObject);
 	}
 
 	bool IsWithinSensorRadius (Transform tr)
@@ -341,23 +437,27 @@ public class Enemy : MonoBehaviour
 	}
 
 	/// <summary>
-	/// Return the nearest bait within the sensor radius if any, else return null
+	/// Return the nearest food within the sensor radius if any, else return null
 	/// </summary>
-	/// <returns>The nearest bait within sensor radius, else if none found.</returns>
-	Bait GetNearestDetectableBaitWithinSensorRadius ()
+	/// <returns>The nearest food within sensor radius, else if none found.</returns>
+	Food GetNearestDetectableFoodWithinSensorRadius ()
 	{
-		float nearestBaitRadius = float.MaxValue;
-		Bait nearestBait = null;
-		foreach (Bait bait in GameManager.current.BaitManager.GetObjectsInUse()) {
-			if (!bait.Detectable) continue;
-			float distanceToBait = ((Vector2) (bait.transform.position - transform.position)).sqrMagnitude;
-			if (distanceToBait < sensorRadius * sensorRadius && distanceToBait < nearestBaitRadius) {
-				nearestBaitRadius = distanceToBait;
-				nearestBait = bait;
+		float nearestFoodRadius = float.MaxValue;
+		Food nearestFood = null;
+		// iterate over all food elements in the scene (O(n), acceptable since n is low, around 15)
+		List<Food> foods = new List<Food>();
+		foods.AddRange(GameManager.current.Player.BaitManager.GetObjectsInUse().Select(bait => (Food) bait));
+		foods.AddRange(OfferingManager.Instance.Offerings);
+		foreach (Food food in foods) {
+			if (!food.Detectable) continue;
+			float distanceToFood = ((Vector2) (food.transform.position - transform.position)).sqrMagnitude;
+			if (distanceToFood < sensorRadius * sensorRadius && distanceToFood < nearestFoodRadius) {
+				nearestFoodRadius = distanceToFood;
+				nearestFood = food;
 			}
 		}
-//		if (nearestBait != null) Debug.LogFormat("{0} found nearest bait: {1}", this, nearestBait);
-		return nearestBait;
+//		if (nearestFood != null) Debug.LogFormat("{0} found nearest food: {1}", this, nearestFood);
+		return nearestFood;
 	}
 
 }

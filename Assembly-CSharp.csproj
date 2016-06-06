@@ -192,7 +192,9 @@
      <Compile Include="Assets\_Code\CollectableItem.cs" />
      <Compile Include="Assets\_Code\DebugSceneLoader.cs" />
      <Compile Include="Assets\_Code\Enemy.cs" />
+     <Compile Include="Assets\_Code\Food.cs" />
      <Compile Include="Assets\_Code\GameManager.cs" />
+     <Compile Include="Assets\_Code\OfferingManager.cs" />
      <Compile Include="Assets\_Code\PathfinderAgent.cs" />
      <Compile Include="Assets\_Code\Pattern\Exceptions.cs" />
      <Compile Include="Assets\_Code\Pattern\IPooledObject.cs" />

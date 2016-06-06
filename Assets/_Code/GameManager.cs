@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     }
 
     public UIManager UIManage;
-	public BaitManager BaitManager;
     public string CurrentScene;
     public int NeededScore;
 	public Text NeededScoreText;

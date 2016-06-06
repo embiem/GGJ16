@@ -115,7 +115,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            GameManager.current.Player.GiveUpCollectable();
+            GameManager.current.Player.DropCollectable();
         }
     }
 
