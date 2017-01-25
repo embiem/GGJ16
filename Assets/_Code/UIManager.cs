@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 using UnityEngine.UI;
+using System.Collections;
 
 #region Windows
 
@@ -115,7 +115,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            GameManager.current.Player.GiveUpCollectable();
+            GameManager.current.Player.DropCollectable();
         }
     }
 

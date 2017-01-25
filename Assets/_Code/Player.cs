@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     public GameObject TrapPrefab;
 
     [Header("Assignments")]
+    public BaitManager BaitManager;
     public ParticleSystem PS;
     public Animator myAnim;
     public GameObject BurnDownParticle;
@@ -45,6 +46,8 @@ public class Player : MonoBehaviour
     public AudioClip[] ItemTossInClips;
     public AudioClip ItemPickupClip;
     public AudioSource ItemTossInAS;
+
+	[Header("Item")] public float DropItemDistance = 1f;
 
     [Header("Balancing")]
 	public float SlowSpeed = 4f;
@@ -79,7 +82,7 @@ public class Player : MonoBehaviour
 
 	private PlayerState currState;
     private CollectableItem currCollectable;
-    private float lastTimeTossed;
+    private float lastTimeDropped;
 	private float noMoveTimer;
 
     private float fastTimer;
@@ -113,7 +116,7 @@ public class Player : MonoBehaviour
 
 		currState = PlayerState.Walking;
 
-        lastTimeTossed = Time.time;
+        lastTimeDropped = Time.time;
 
         SelectionRing = GameObject.Instantiate(SelectionRing);
         SelectionRing.transform.localScale = Vector3.zero;
@@ -126,10 +129,13 @@ public class Player : MonoBehaviour
         currHealth = MaxHealth;
     }
 
+#if UNITY_EDITOR
 	public void DebugReset () {
+        currHealth = MaxHealth;
 		currMana = MaxMana;
 		lastManaIncrease = -100f;
 	}
+#endif
 
     void Update()
     {
@@ -206,15 +212,17 @@ public class Player : MonoBehaviour
 					}
 		            else
 		            {
-		                GiveUpCollectable();
+		                DropCollectable();
 		            }
 				}
 			}
 
+        #if UNITY_EDITOR
 			// DEBUG
-//			if (Input.GetKeyDown(KeyCode.R)) {
-//				DebugReset();
-//			}
+			if (Input.GetKeyDown(KeyCode.R)) {
+				DebugReset();
+			}
+        #endif
         }
 
         float velMagnitude = myPathfinder.Velocity.magnitude;
@@ -408,7 +416,7 @@ public class Player : MonoBehaviour
             myAnim.SetTrigger("Cast");
 
 			// try to get some pooled bait
-			Bait bait = GameManager.current.BaitManager.GetObject();
+			Bait bait = BaitManager.GetObject();
 			if (bait == null) {
 				// starvation
 				Debug.LogWarning("Cannot do bait skill: bait starvation, please increase the pool size");
@@ -434,7 +442,7 @@ public class Player : MonoBehaviour
 			currMana -= ManaCostBait;
 			myPathfinder.RotateTo(spawnPoint);
 
-			bait.Spawn(spawnPoint, transform.rotation, isDetectable: true);
+			bait.Spawn(spawnPoint, transform.rotation, ignored: false);
 
 //			// Tween bait toward target
 //			LeanTween.move(Bait.gameObject, targetPosition, ThrowBaitTime).setEase(LeanTweenType.linear).setOnComplete(() => Bait.SetDetectable(true));
@@ -472,6 +480,10 @@ public class Player : MonoBehaviour
     {
         if (currHealth > 0) // only possible if we're still alive
         {
+	        // drop item if any
+	        if (currCollectable != null)
+		        DropCollectable();
+
             currHealth -= HealthCostPerCat;
 
             if (currHealth <= 0)
@@ -486,7 +498,7 @@ public class Player : MonoBehaviour
 
     private void PickUpCollectable(CollectableItem collectableItem)
     {
-        if (Time.time - lastTimeTossed > 2f)
+        if (Time.time - lastTimeDropped > 2f)
         {
             collectableItem.Take();
             currCollectable = collectableItem;
@@ -502,28 +514,27 @@ public class Player : MonoBehaviour
 	/// </summary>
 	/// <returns>The collectible.</returns>
 	public CollectableItem DropCollectable () {
-		if (currCollectable != null)
+		if (currCollectable != null) 
 		{
-            lastTimeTossed = Time.time;
 			CollectableItem item = currCollectable;
-			currCollectable.transform.parent = null;
-			currCollectable = null;
-			// TODO: box should fall or stick to ground level
+            currCollectable.Dropped(transform.position + DropItemDistance * transform.forward);
+            currCollectable = null;
+
+            lastTimeDropped = Time.time;
 			myPathfinder.speed = NormalSpeed;  // character recovers normal speed when not holding item
-			return item;
+			
+            return item;
 		}
 
 		Debug.LogWarning("Player character cannot drop feed block: no feed block in hand");
 		return null;
 	}
 
-	// TODO: refactor wirth DropCollectable
     public void GiveUpCollectable()
     {
-        if (Time.time - lastTimeTossed > 2f)
+        if (Time.time - lastTimeDropped > 2f)
         {
 			DropCollectable().Reset();
-            lastTimeTossed = Time.time;
         }
     }
 

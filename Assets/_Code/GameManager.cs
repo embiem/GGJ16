@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     }
 
     public UIManager UIManage;
-	public BaitManager BaitManager;
     public string CurrentScene;
     public int NeededScore;
 	public Text NeededScoreText;
@@ -31,6 +30,10 @@ public class GameManager : MonoBehaviour
 
     private bool ingame; public bool IsIngame { get { return ingame; } }
     private Player player; public Player Player { get { return player; } }
+
+    void Awake() {
+
+    }
 
     void Start()
     {
@@ -52,6 +55,11 @@ public class GameManager : MonoBehaviour
         while (!async.isDone)
             yield return new WaitForEndOfFrame();
 
+        yield return StartCoroutine(StartGame());
+    }
+
+    public IEnumerator StartGame()
+    {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         UIManage.BombsCountTxt.text = player.BombCount.ToString();
 
