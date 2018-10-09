@@ -1,4 +1,8 @@
 Library/
 Temp/
 Builds/
+obj/
 *.unitypackage
+
+.vs/
+*.sublime-workspace
